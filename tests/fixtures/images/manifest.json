@@ -1,0 +1,392 @@
+[
+ {
+  "name": "tiff-none.tif",
+  "tolerance": 0,
+  "note": "MarumaSign TiffDecoder"
+ },
+ {
+  "name": "tiff-lzw.tif",
+  "tolerance": 0,
+  "note": "MarumaSign TiffDecoder"
+ },
+ {
+  "name": "tiff-lzw-pred.tif",
+  "tolerance": 0,
+  "note": "MarumaSign TiffDecoder"
+ },
+ {
+  "name": "tiff-zip.tif",
+  "tolerance": 0,
+  "note": "MarumaSign TiffDecoder"
+ },
+ {
+  "name": "tiff-packbits.tif",
+  "tolerance": 0,
+  "note": "MarumaSign TiffDecoder"
+ },
+ {
+  "name": "tiff-jpeg.tif",
+  "tolerance": 6,
+  "note": "MarumaSign TiffDecoder"
+ },
+ {
+  "name": "tiff-jpeg-gray.tif",
+  "tolerance": 6,
+  "note": "MarumaSign TiffDecoder"
+ },
+ {
+  "name": "tiff-big.tif",
+  "tolerance": 0,
+  "note": "MarumaSign TiffDecoder"
+ },
+ {
+  "name": "tiff-16.tif",
+  "tolerance": 0,
+  "note": "MarumaSign TiffDecoder"
+ },
+ {
+  "name": "tiff-float.tif",
+  "tolerance": 0,
+  "note": "MarumaSign TiffDecoder"
+ },
+ {
+  "name": "tiff-half.tif",
+  "tolerance": 0,
+  "note": "MarumaSign TiffDecoder"
+ },
+ {
+  "name": "tiff-tiled.tif",
+  "tolerance": 0,
+  "note": "MarumaSign TiffDecoder"
+ },
+ {
+  "name": "tiff-planar.tif",
+  "tolerance": 0,
+  "note": "MarumaSign TiffDecoder"
+ },
+ {
+  "name": "tiff-cmyk.tif",
+  "tolerance": 0,
+  "note": "MarumaSign TiffDecoder"
+ },
+ {
+  "name": "tiff-gray.tif",
+  "tolerance": 0,
+  "note": "MarumaSign TiffDecoder"
+ },
+ {
+  "name": "tiff-bilevel.tif",
+  "tolerance": 0,
+  "note": "MarumaSign TiffDecoder"
+ },
+ {
+  "name": "tiff-palette.tif",
+  "tolerance": 0,
+  "note": "MarumaSign TiffDecoder"
+ },
+ {
+  "name": "tiff-be.tif",
+  "tolerance": 0,
+  "note": "MarumaSign TiffDecoder"
+ },
+ {
+  "name": "tiff-orient.tif",
+  "tolerance": 0,
+  "note": "MarumaSign TiffDecoder"
+ },
+ {
+  "name": "tiff-zstd.tif",
+  "tolerance": 0,
+  "note": "MarumaSign TiffDecoder"
+ },
+ {
+  "name": "tiff-deflate-old.tif",
+  "tolerance": 0,
+  "note": "MarumaSign TiffDecoder"
+ },
+ {
+  "name": "dds-dxt1.dds",
+  "tolerance": 0,
+  "note": "MarumaSign DdsDecoder"
+ },
+ {
+  "name": "dds-dxt3.dds",
+  "tolerance": 0,
+  "note": "MarumaSign DdsDecoder"
+ },
+ {
+  "name": "dds-dxt5.dds",
+  "tolerance": 0,
+  "note": "MarumaSign DdsDecoder"
+ },
+ {
+  "name": "dds-ati1.dds",
+  "tolerance": 0,
+  "note": "MarumaSign DdsDecoder"
+ },
+ {
+  "name": "dds-bc4s.dds",
+  "tolerance": 0,
+  "note": "MarumaSign DdsDecoder"
+ },
+ {
+  "name": "dds-ati2.dds",
+  "tolerance": 0,
+  "note": "MarumaSign DdsDecoder"
+ },
+ {
+  "name": "dds-bc5s.dds",
+  "tolerance": 0,
+  "note": "MarumaSign DdsDecoder"
+ },
+ {
+  "name": "dds-bc1-dx10.dds",
+  "tolerance": 0,
+  "note": "MarumaSign DdsDecoder"
+ },
+ {
+  "name": "dds-bc6h.dds",
+  "tolerance": 0,
+  "note": "MarumaSign DdsDecoder"
+ },
+ {
+  "name": "dds-bc6h-sf.dds",
+  "tolerance": 0,
+  "note": "MarumaSign DdsDecoder"
+ },
+ {
+  "name": "dds-bc7.dds",
+  "tolerance": 0,
+  "note": "MarumaSign DdsDecoder"
+ },
+ {
+  "name": "dds-bc7-srgb.dds",
+  "tolerance": 0,
+  "note": "MarumaSign DdsDecoder"
+ },
+ {
+  "name": "dds-bgr24.dds",
+  "tolerance": 0,
+  "note": "MarumaSign DdsDecoder"
+ },
+ {
+  "name": "dds-argb32.dds",
+  "tolerance": 0,
+  "note": "MarumaSign DdsDecoder"
+ },
+ {
+  "name": "dds-r5g6b5.dds",
+  "tolerance": 0,
+  "note": "MarumaSign DdsDecoder"
+ },
+ {
+  "name": "dds-l8.dds",
+  "tolerance": 0,
+  "note": "MarumaSign DdsDecoder"
+ },
+ {
+  "name": "dds-a8l8.dds",
+  "tolerance": 0,
+  "note": "MarumaSign DdsDecoder"
+ },
+ {
+  "name": "dds-pal8.dds",
+  "tolerance": 0,
+  "note": "MarumaSign DdsDecoder"
+ },
+ {
+  "name": "dds-magick.dds",
+  "tolerance": 0,
+  "note": "MarumaSign DdsDecoder"
+ },
+ {
+  "name": "dpx-rgb24.dpx",
+  "tolerance": 0,
+  "note": "FFmpeg dpx"
+ },
+ {
+  "name": "dpx-rgba.dpx",
+  "tolerance": 0,
+  "note": "FFmpeg dpx"
+ },
+ {
+  "name": "dpx-gray.dpx",
+  "tolerance": 0,
+  "note": "FFmpeg dpx"
+ },
+ {
+  "name": "dpx-abgr.dpx",
+  "tolerance": 0,
+  "note": "FFmpeg dpx"
+ },
+ {
+  "name": "dpx-rgb48be.dpx",
+  "tolerance": 1,
+  "note": "FFmpeg dpx"
+ },
+ {
+  "name": "dpx-rgba64le.dpx",
+  "tolerance": 1,
+  "note": "FFmpeg dpx"
+ },
+ {
+  "name": "dpx-gray16be.dpx",
+  "tolerance": 1,
+  "note": "FFmpeg dpx"
+ },
+ {
+  "name": "dpx-gbrp10be.dpx",
+  "tolerance": 1,
+  "note": "FFmpeg dpx"
+ },
+ {
+  "name": "dpx-gbrp10le.dpx",
+  "tolerance": 1,
+  "note": "FFmpeg dpx"
+ },
+ {
+  "name": "dpx-gbrp12be.dpx",
+  "tolerance": 1,
+  "note": "FFmpeg dpx"
+ },
+ {
+  "name": "xwd-rgb24.xwd",
+  "tolerance": 0,
+  "note": "FFmpeg xwd"
+ },
+ {
+  "name": "xwd-bgr24.xwd",
+  "tolerance": 0,
+  "note": "FFmpeg xwd"
+ },
+ {
+  "name": "xwd-bgra.xwd",
+  "tolerance": 0,
+  "note": "FFmpeg xwd"
+ },
+ {
+  "name": "xwd-argb.xwd",
+  "tolerance": 0,
+  "note": "FFmpeg xwd"
+ },
+ {
+  "name": "xwd-rgb565be.xwd",
+  "tolerance": 0,
+  "note": "FFmpeg xwd"
+ },
+ {
+  "name": "xwd-rgb565le.xwd",
+  "tolerance": 0,
+  "note": "FFmpeg xwd"
+ },
+ {
+  "name": "xwd-rgb555le.xwd",
+  "tolerance": 0,
+  "note": "FFmpeg xwd"
+ },
+ {
+  "name": "xwd-pal8.xwd",
+  "tolerance": 0,
+  "note": "FFmpeg xwd"
+ },
+ {
+  "name": "xwd-gray.xwd",
+  "tolerance": 0,
+  "note": "FFmpeg xwd"
+ },
+ {
+  "name": "xwd-monow.xwd",
+  "tolerance": 0,
+  "note": "FFmpeg xwd"
+ },
+ {
+  "name": "pgx-8u.pgx",
+  "tolerance": 1,
+  "note": "FFmpeg pgx"
+ },
+ {
+  "name": "pgx-6u.pgx",
+  "tolerance": 1,
+  "note": "FFmpeg pgx"
+ },
+ {
+  "name": "pgx-8s.pgx",
+  "tolerance": 1,
+  "note": "FFmpeg pgx"
+ },
+ {
+  "name": "pgx-12u.pgx",
+  "tolerance": 1,
+  "note": "FFmpeg pgx"
+ },
+ {
+  "name": "pgx-16u.pgx",
+  "tolerance": 1,
+  "note": "FFmpeg pgx"
+ },
+ {
+  "name": "pgx-12s.pgx",
+  "tolerance": 1,
+  "note": "FFmpeg pgx"
+ },
+ {
+  "name": "iff-ilbm4.iff",
+  "tolerance": 0,
+  "note": "FFmpeg iff"
+ },
+ {
+  "name": "iff-ilbm5-rle.iff",
+  "tolerance": 0,
+  "note": "FFmpeg iff"
+ },
+ {
+  "name": "iff-ilbm8.iff",
+  "tolerance": 0,
+  "note": "FFmpeg iff"
+ },
+ {
+  "name": "iff-ehb.iff",
+  "tolerance": 0,
+  "note": "FFmpeg iff"
+ },
+ {
+  "name": "iff-ham6.iff",
+  "tolerance": 0,
+  "note": "FFmpeg iff"
+ },
+ {
+  "name": "iff-ham8.iff",
+  "tolerance": 0,
+  "note": "FFmpeg iff"
+ },
+ {
+  "name": "iff-pbm.iff",
+  "tolerance": 0,
+  "note": "FFmpeg iff"
+ },
+ {
+  "name": "iff-acbm.iff",
+  "tolerance": 0,
+  "note": "FFmpeg iff"
+ },
+ {
+  "name": "iff-gray.iff",
+  "tolerance": 0,
+  "note": "FFmpeg iff"
+ },
+ {
+  "name": "iff-transparent.iff",
+  "tolerance": 0,
+  "note": "FFmpeg iff"
+ },
+ {
+  "name": "iff-mask.iff",
+  "tolerance": 0,
+  "note": "FFmpeg iff"
+ },
+ {
+  "name": "iff-rgb24.iff",
+  "tolerance": 0,
+  "note": "FFmpeg iff"
+ }
+]

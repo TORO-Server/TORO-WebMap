@@ -1,0 +1,19 @@
+{
+  "name": "TORO Server 地図",
+  "short_name": "TORO 地図",
+  "description": "TORO Server (Minecraft) のワールドの地図",
+  "lang": "ja",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "categories": ["games", "navigation"],
+  "icons": [
+    { "src": "/pwa/map-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/pwa/map-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/pwa/map-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
