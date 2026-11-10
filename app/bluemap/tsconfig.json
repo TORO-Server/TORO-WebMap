@@ -1,0 +1,25 @@
+{
+  // BlueMap の画面 (BlueMap の webapp を TypeScript にしたもの) の型の確かめ方。npm run typecheck で vue-tsc が使う
+  // 元が JavaScript なので null の確認 (strictNullChecks) までは求めない。引数や持ち物の型は書く (noImplicitAny)
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "strict": false,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "strictBindCallApply": true,
+    "strictFunctionTypes": true,
+    "useDefineForClassFields": false,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    // 構造物の読み込み (marumasign/structure/) は Node の試験でも使うので、.ts を付けて import する
+    "allowImportingTsExtensions": true,
+    // 画像や ?url の import の型
+    "types": ["vite/client"]
+  },
+  "include": ["**/*.ts", "**/*.vue"]
+}

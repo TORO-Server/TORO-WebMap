@@ -1,0 +1,6 @@
+node_modules
+.nuxt
+.output
+public/toro
+public/sw.js
+dev.log

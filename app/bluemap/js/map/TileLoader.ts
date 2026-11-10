@@ -1,0 +1,131 @@
+/*
+ * This file is part of BlueMap, licensed under the MIT License (MIT).
+ *
+ * Copyright (c) Blue (Lukas Rieger) <https://bluecolored.de>
+ * Copyright (c) contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+import {pathFromCoords} from "../util/Utils";
+import {BufferGeometryLoader, Mesh, Material} from "three";
+import {PRBMLoader} from "./hires/PRBMLoader";
+import {RevalidatingFileLoader} from "../util/RevalidatingFileLoader";
+
+export interface HiresTileSettings {
+    tileSize: {x: number, z: number};
+    scale: {x: number, z: number};
+    translate: {x: number, z: number};
+}
+
+export class TileLoader {
+
+    declare readonly isTileLoader: true;
+
+    tilePath: string;
+    material: Material | Material[];
+    tileSettings: HiresTileSettings;
+
+    revalidatedUrls: Set<string> | undefined;
+
+    loadBlocker: () => Promise<void>;
+
+    fileLoader: RevalidatingFileLoader<ArrayBuffer>;
+    clientDecompression: boolean;
+
+    bufferGeometryLoader: PRBMLoader;
+
+    /**
+     * @param tilePath {string}
+     * @param material {Material | Material[]}
+     * @param tileSettings {{
+     *      tileSize: {x: number, z: number},
+     *	    scale: {x: number, z: number},
+     *      translate: {x: number, z: number}
+     * }}
+     * @param loadBlocker {function: Promise}
+     * @param revalidatedUrls {Set<string> | undefined}
+     * @param clientDecompression {boolean}
+     */
+    constructor(tilePath: string, material: Material | Material[], tileSettings: HiresTileSettings, loadBlocker: () => Promise<void> = () => Promise.resolve(), revalidatedUrls: Set<string> | undefined, clientDecompression: boolean) {
+        Object.defineProperty( this, 'isTileLoader', { value: true } );
+
+        this.tilePath = tilePath;
+        this.material = material;
+        this.tileSettings = tileSettings;
+
+        this.revalidatedUrls = revalidatedUrls;
+
+        this.loadBlocker = loadBlocker;
+
+        this.fileLoader = new RevalidatingFileLoader<ArrayBuffer>();
+        this.fileLoader.setResponseType('arraybuffer');
+        this.fileLoader.setRevalidatedUrls(this.revalidatedUrls);
+        this.fileLoader.setClientDecompression(clientDecompression);
+        this.clientDecompression = clientDecompression;
+
+        this.bufferGeometryLoader = new PRBMLoader();
+    }
+
+    load = (tileX: number, tileZ: number, cancelCheck: () => boolean = () => false, force: boolean = false): Promise<Mesh> => {
+        let tileUrl = this.tilePath + pathFromCoords(tileX, tileZ) + '.prbm';
+        if (this.clientDecompression) {
+            tileUrl += '.gz';
+        }
+
+        return new Promise((resolve, reject) => {
+            let revalidatedUrls = this.revalidatedUrls;
+            if (force) {
+                // always revalidate forced loads, even if no revalidation is active (revalidatedUrls is undefined)
+                revalidatedUrls ??= new Set();
+                revalidatedUrls.delete(tileUrl);
+            }
+            this.fileLoader.setRevalidatedUrls(revalidatedUrls);
+            this.fileLoader.load(tileUrl,
+                async (data: ArrayBuffer) => {
+
+                    await this.loadBlocker();
+                    if (cancelCheck()){
+                        reject({status: "cancelled"});
+                        return;
+                    }
+
+                    let geometry = this.bufferGeometryLoader.parse(data);
+
+                    let object = new Mesh(geometry, this.material);
+
+                    let tileSize = this.tileSettings.tileSize;
+                    let translate = this.tileSettings.translate;
+                    let scale = this.tileSettings.scale;
+                    object.position.set(tileX * tileSize.x + translate.x, 0, tileZ * tileSize.z + translate.z);
+                    object.scale.set(scale.x, 1, scale.z);
+
+                    object.userData.tileUrl = tileUrl;
+                    object.userData.tileType = "hires";
+
+                    object.updateMatrixWorld(true);
+
+                    resolve(object);
+                },
+                () => {},
+                reject
+            );
+        });
+    }
+
+}

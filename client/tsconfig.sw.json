@@ -1,0 +1,14 @@
+{
+  // client/sw.ts (Service Worker) の型の確かめ方。DOM ではなく WebWorker の型を使う
+  "compilerOptions": {
+    "target": "ES2020",
+    "lib": ["ES2020", "WebWorker"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "types": []
+  },
+  "include": ["sw.ts"]
+}

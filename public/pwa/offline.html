@@ -1,0 +1,30 @@
+<!doctype html>
+<!-- インターネットにつながらないときに Service Worker (client/sw.ts) が返すページ -->
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#000000">
+  <title>オフライン - TORO Server</title>
+  <style>
+    html, body { height: 100%; margin: 0; }
+    body {
+      display: flex; align-items: center; justify-content: center;
+      padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+      box-sizing: border-box; background: #181818; color: #eee;
+      font-family: system-ui, -apple-system, "Hiragino Sans", "Yu Gothic UI", sans-serif; text-align: center;
+    }
+    main { padding: 24px; max-width: 28em; }
+    h1 { font-size: 1.4em; margin: 0 0 .6em; }
+    p { line-height: 1.7; margin: 0 0 1.4em; }
+    button { font: inherit; min-height: 44px; padding: 0 1.6em; border: 0; border-radius: 6px; background: #006ede; color: #fff; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>インターネットにつながっていません</h1>
+    <p>地図はサーバーから読み込むため、オフラインでは表示できません。接続を確かめて、もう一度お試しください。</p>
+    <button type="button" onclick="location.reload()">再読み込み</button>
+  </main>
+</body>
+</html>

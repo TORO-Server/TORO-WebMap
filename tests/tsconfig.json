@@ -1,0 +1,16 @@
+{
+  // tests/ の型の確かめ方 (npm run typecheck)。試験は Node の型の取り除き (--experimental-strip-types) でそのまま動かす
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "allowImportingTsExtensions": true,
+    "erasableSyntaxOnly": true,
+    "verbatimModuleSyntax": true,
+    "types": ["node"]
+  },
+  "include": ["*.ts"]
+}
