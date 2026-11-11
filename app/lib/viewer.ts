@@ -189,7 +189,9 @@ export class DynmapViewer {
     this.state.ready = true
 
     this.map.on('moveend zoomend', () => this.updateUrlDebounced())
-    this.map.on('dragstart movestart', () => {
+    // 追従の解除は利用者のドラッグ (dragstart) だけにする。movestart は panTo / setView などプログラムからの移動でも
+    // 発火するので、追従中のパンで追従自体が解除されてしまい、解除条件には使えない
+    this.map.on('dragstart', () => {
       if (this.state.following) this.state.following = null
     })
     window.addEventListener('popstate', () => {
