@@ -14,7 +14,7 @@ RUN npm run typecheck && npm test
 # Alpine のパッケージの Node.js は ICU を分けてあり (サーバーの処理は Intl を使わないので en だけで足りる)、本体も小さい。
 # 版の大きな番号は、上の build と同じにする
 FROM alpine:3.24.3@sha256:be2656061b536c1883c4034790e21d0a09c5aaaf51968b89368a3c0371ea2c9a
-RUN apk add --no-cache nodejs
+RUN apk add --no-cache nodejs=24.22.3-r0
 WORKDIR /app
 COPY --from=build /src/.output ./
 # 非 root で動かす。書く場所 (/var/cache/webmap など) は、実行する側がマウントして渡す
