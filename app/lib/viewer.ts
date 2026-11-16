@@ -4,6 +4,7 @@ import { elementMarker } from './element-icon'
 import { Markers } from './markers'
 import { toLatLng, toLocation } from './projection'
 import { sanitizeHtml } from './sanitize-html'
+import { apiUrl, wsUrl } from './api'
 import { HDTileLayer } from './tile-layer'
 import { isServerDay } from './time'
 import { boolParam, intParam, param } from './url'
@@ -11,13 +12,6 @@ import type { ComponentConfig, Configuration, Location, MapConfig, PlayerUpdate,
 
 // Dynmap の地図の画面 (web/js/map.js の DynMap と、playermarkers.js, chat*.js, coord.js, link.js の代わり)
 // 見た目は Dynmap の CSS (css/dynmap_style.css) をそのまま使うので、同じクラス名の要素を作る
-
-const URLS = {
-  configuration: 'up/configuration',
-  update: (world: string, ts: number) => `up/world/${encodeURIComponent(world)}/${ts}`,
-  tiles: 'tiles/',
-  markers: 'tiles/',
-}
 
 // worlds.txt の extrazoomout を増やすと、縮小した段が増え、Leaflet のズームの数 (0 がいちばん縮小) がずれる。
 // リンクの zoom= と configuration.txt の defaultzoom は extrazoomout が 2 のときの数のまま扱い、
@@ -113,7 +107,7 @@ export class DynmapViewer {
   }
 
   async start(container: HTMLElement): Promise<void> {
-    const res = await fetch(URLS.configuration)
+    const res = await fetch(apiUrl('configuration'))
     if (!res.ok) throw new Error(`Could not retrieve configuration: ${res.status}`)
     this.config = (await res.json()) as Configuration
     this.state.config = this.config
@@ -170,7 +164,6 @@ export class DynmapViewer {
     this.markers = new Markers({
       map: this.map,
       toLatLng: loc => this.toLatLng(loc),
-      markersUrl: URLS.markers,
       showLabels: markersConfig?.showlabel === true,
       addOverlay: (layer, name, priority, visible) => this.addOverlay(layer, name, priority, visible),
       removeOverlay: layer => this.removeOverlay(layer),
@@ -241,7 +234,7 @@ export class DynmapViewer {
     this.state.world = worldName
     this.state.map = mapName
     this.currentMap.value = map
-    this.tileLayer = new HDTileLayer(map, worldName, URLS.tiles, () => this.serverday)
+    this.tileLayer = new HDTileLayer(map, worldName, () => this.serverday)
 
     const maxZoom = map.mapzoomin + map.mapzoomout
     let zoom = this.map.getZoom()
@@ -414,12 +407,12 @@ export class DynmapViewer {
   }
 
   // ---- ワールドの更新 ----
-  // WebSocket (/up/ws) につながっているあいだは、更新とプレイヤーの位置が届くのを待つ (server/utils/live.ts)。
-  // つながらないときは、Dynmap の画面と同じく updaterate ごとに up/world/... を取りに行く
+  // WebSocket (api の ws) につながっているあいだは、更新とプレイヤーの位置が届くのを待つ (server/utils/live.ts)。
+  // つながらないときは、Dynmap の画面と同じく updaterate ごとに world/... を取りに行く
 
   private connectLive(): void {
     if (typeof WebSocket === 'undefined') return
-    const ws = new WebSocket(`${window.location.protocol === 'https:' ? 'wss' : 'ws'}://${window.location.host}/up/ws`)
+    const ws = new WebSocket(wsUrl())
     this.ws = ws
     ws.onopen = () => {
       this.live = true
@@ -453,7 +446,7 @@ export class DynmapViewer {
     const again = (): void => { setTimeout(() => void this.update(), this.config.updaterate) }
     if (this.live || document.visibilityState === 'hidden') return again()
     try {
-      const res = await fetch(URLS.update(this.state.world, this.lasttimestamp))
+      const res = await fetch(apiUrl(`world/${encodeURIComponent(this.state.world)}/${this.lasttimestamp}`))
       if (!res.ok) throw new Error(res.statusText || String(res.status))
       if (!this.receive((await res.json()) as WorldUpdate | null)) return
     }
@@ -619,7 +612,7 @@ export class DynmapViewer {
 
   faceUrl(account: string, size: 8 | 16 | 32 | 'body'): string {
     const dir = size === 'body' ? 'body' : `${size}x${size}`
-    return `${URLS.markers}faces/${dir}/${encodeURIComponent(account)}.png`
+    return apiUrl(`tiles/faces/${dir}/${encodeURIComponent(account)}.png`)
   }
 
   private playerConfig(): { showplayerfaces?: boolean, smallplayerfaces?: boolean, largeplayerfaces?: boolean, showplayerbody?: boolean, showplayerhealth?: boolean } {

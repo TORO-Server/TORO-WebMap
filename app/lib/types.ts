@@ -1,4 +1,4 @@
-// Dynmap が返す JSON の形 (up/configuration, up/world/<world>/<時刻>, tiles/_markers_/marker_<world>.json)
+// Dynmap が返す JSON の形 (API の configuration, world/<world>/<時刻>, tiles/_markers_/marker_<world>.json)
 
 export interface Location {
   x: number

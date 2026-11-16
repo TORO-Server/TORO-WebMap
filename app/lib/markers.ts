@@ -1,4 +1,5 @@
 import L from 'leaflet'
+import { apiUrl } from './api'
 import { CulledMarkerGroup } from './culled-group'
 import { elementMarker, html } from './element-icon'
 import { GLMarkerLayer, HIT_PAD, webglAvailable } from './gl-marker-layer'
@@ -40,8 +41,6 @@ export interface MarkerHost {
   map: L.Map
   /** 今の地図の投影で、ワールドの座標を地図の座標にする */
   toLatLng(loc: Location): L.LatLng
-  /** tiles/ の URL (マーカーの JSON とアイコン) */
-  markersUrl: string
   /** マーカーの組の名前を出すか (markers の設定の showlabel) */
   showLabels: boolean
   addOverlay(layer: L.Layer, name: string, priority: number, visible: boolean): void
@@ -66,7 +65,7 @@ export class Markers {
   async load(world: string): Promise<void> {
     const ticket = ++this.loading
     for (const set of this.sets.values()) this.clearSet(set)
-    const res = await fetch(`${this.host.markersUrl}_markers_/marker_${encodeURIComponent(world)}.json`)
+    const res = await fetch(apiUrl(`tiles/_markers_/marker_${encodeURIComponent(world)}.json`))
     const file = (await res.json()) as MarkerFile
     if (ticket !== this.loading) return
 
@@ -190,7 +189,7 @@ export class Markers {
 
   private iconOf(item: Item): GLIcon {
     const m = item.data as PointMarker
-    return { url: `${this.host.markersUrl}_markers_/${m.icon}.png`, size: Number.parseInt(m.dim, 10) || 16 }
+    return { url: apiUrl(`tiles/_markers_/${m.icon}.png`), size: Number.parseInt(m.dim, 10) || 16 }
   }
 
   private updateSet(id: string, s: MarkerSetFile): void {
@@ -276,7 +275,7 @@ export class Markers {
       div.className = 'Marker mapMarker'
       const img = document.createElement('img')
       img.className = 'markerIcon' + m.dim
-      img.src = `${this.host.markersUrl}_markers_/${m.icon}.png`
+      img.src = apiUrl(`tiles/_markers_/${m.icon}.png`)
       div.appendChild(img)
       // アイコンの外側にも透明な当たりを足して、押しやすくする (名前は :hover で出るので、余白にマウスが乗っても出る)
       const pad = document.createElement('span')

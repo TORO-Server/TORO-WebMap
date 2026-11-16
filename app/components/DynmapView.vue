@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // map.torosaba.net の地図の画面。Dynmap の web/index.html の代わり
-// 地図のデータは up/... と tiles/... (toro-webmap が TiDB から返す)、見た目は Dynmap の css/ と images/ をそのまま使う
+// 地図のデータは API (app/lib/api.ts。toro-webmap が TiDB から返す)、見た目は Dynmap の css/ と images/ (public/) をそのまま使う
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { computed, markRaw, onMounted, ref } from 'vue'

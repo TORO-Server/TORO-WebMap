@@ -32,6 +32,7 @@ MarumaSign の看板 (画像・動画・音声・ライブ配信・PDF) を 3D �
 | `app/lib/gl-marker-layer.ts` | 点のマーカーの絵を WebGL でまとめて描く。マウスを乗せたものだけ元の DOM のマーカーを重ね、名前と吹き出しはそれが出す |
 | `app/lib/culled-group.ts` | 名前を常に出す組と、WebGL が使えないとき (`?gl=0` でも) の DOM のマーカー。画面の近くのものだけ作る |
 | `server/routes/tiles/[...path].get.ts` | Dynmap の `/tiles/...` (タイル、マーカー、アイコン、プレイヤーの顔) |
+| `server/routes/map/v1/**` | 上の `/up/*` `/tiles/*` と同じ実装 (`server/utils/dynmap-api.ts`) を api.torosaba.net の `/map/v1/*` で返す。静的/API 分離は `docs/map-deployment.md` |
 | `server/routes/up/configuration.get.ts` | Dynmap の `/up/configuration` |
 | `server/routes/up/world/[world]/[ts].get.ts` | Dynmap の `/up/world/<world>/<時刻>` |
 | `server/routes/maps/[...path].get.ts` | BlueMap の `/maps/<map>/...` |

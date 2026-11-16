@@ -1,4 +1,5 @@
 import L from 'leaflet'
+import { apiUrl } from './api'
 import type { MapConfig } from './types'
 
 // Dynmap の HD 地図のタイル (web/js/hdmap.js の HDMapType と dynmaputils.js の DynmapTileLayer と同じ名前のタイルを読む)
@@ -13,7 +14,6 @@ export class HDTileLayer extends L.TileLayer {
   constructor(
     private readonly map: MapConfig,
     private readonly worldName: string,
-    private readonly tilesUrl: string,
     private readonly isDay: () => boolean,
   ) {
     super('', {
@@ -64,7 +64,7 @@ export class HDTileLayer extends L.TileLayer {
   }
 
   private urlFor(name: string, timestamp?: number): string {
-    const url = this.tilesUrl + encodeURIComponent(this.worldName) + '/' + name
+    const url = apiUrl(`tiles/${encodeURIComponent(this.worldName)}/${name}`)
     return timestamp === undefined ? url : `${url}?timestamp=${timestamp}`
   }
 

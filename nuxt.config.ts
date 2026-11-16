@@ -58,6 +58,11 @@ export default defineNuxtConfig({
     },
   },
   runtimeConfig: {
+    public: {
+      // Dynmap の画面が読む API の基点 (app/lib/api.ts)。この文字列の正本はここ 1 か所。
+      // 静的な画面 (GitHub Pages) のビルドで NUXT_PUBLIC_API_BASE を設定すると差し替えられる。docs/map-deployment.md
+      apiBase: 'https://api.torosaba.net/map/v1',
+    },
     // NUXT_DB_HOST などの環境変数で上書きする
     db: {
       host: 'tidb',
@@ -130,8 +135,8 @@ export default defineNuxtConfig({
     // /up/ws (ブラウザ) と /live/plugin (TORO-Core) の WebSocket
     experimental: { websocket: true },
   },
-  // npm run dev: 地図のデータと Dynmap の css/ images/ は本番 (map.torosaba.net) から借りる。
-  // /up/ws は手元で動かす (NUXT_DB_HOST などで DB につなぐ)。TiDB はホストに公開しておらず toro-db の内側だけなので、
+  // npm run dev: Dynmap の画面の API は既定の apiBase (本番の API) を使う。css/ images/ は public/ にある。
+  // 手元の API を使うなら NUXT_PUBLIC_API_BASE=/map/v1 で手元のサーバーを指す (NUXT_DB_HOST などで DB につなぐ)。TiDB はホストに公開しておらず toro-db の内側だけなので、
   // サーバーで tidb の IP を調べて (docker network inspect toro-db)、ssh -L 4000:<tidb の IP>:4000 でつなぐ
   // BlueMap の画面 (?app=bluemap) では settings.json, lang/, assets/, maps/ などを 3d-map.torosaba.net から借りる
   $development: {
@@ -141,7 +146,6 @@ export default defineNuxtConfig({
     },
     nitro: {
       devProxy: {
-        ...Object.fromEntries(['/up/configuration', '/up/world', '/tiles', '/css', '/images'].map(p => [p, { target: `https://map.torosaba.net${p}`, changeOrigin: true }])),
         ...Object.fromEntries(['/settings.json', '/lang', '/assets', '/maps', '/js', '/marumasign'].map(p => [p, { target: `https://3d-map.torosaba.net${p}`, changeOrigin: true }])),
       },
     },

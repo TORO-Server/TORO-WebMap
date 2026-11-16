@@ -1,0 +1,59 @@
+name: pages
+
+# map.torosaba.net の静的な画面 (Nuxt の nuxt generate の出力) を GitHub Pages に置く。API は api.torosaba.net/map/v1 (docs/map-deployment.md)。
+# カスタムドメインはリポジトリの Settings > Pages で設定する (Actions 配備では public/CNAME は使われない)。
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci --no-audit --no-fund
+
+      # public/toro/dynmap-client.js と public/sw.js を作る (git には入れない)
+      - run: npm run build:client
+
+      # API の基点は nuxt.config.ts の既定を使う。差し替えるときだけリポジトリの変数 API_BASE (非 secret) を設定する
+      - name: Generate site
+        env:
+          API_BASE: ${{ vars.API_BASE }}
+        run: |
+          if [ -n "$API_BASE" ]; then export NUXT_PUBLIC_API_BASE="$API_BASE"; fi
+          npx nuxt generate
+
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: .output/public
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
