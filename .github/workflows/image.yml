@@ -27,6 +27,14 @@ jobs:
 
       - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4
 
+      # 試験用の自己署名の鍵と証明書は、リポジトリに置かない (.gitignore)。試験 (tests/marumasign-proxy.test.ts) が読むので、runner の上で使い捨てを作る
+      # (ビルドの文脈 = この作業ツリーに入り、Dockerfile の COPY . . で test 段に届く。コミットはしない)
+      - name: 試験用の使い捨ての鍵と証明書を作る
+        run: |
+          mkdir -p tests/fixtures
+          openssl req -x509 -newkey rsa:2048 -nodes -days 2 \
+            -subj "/CN=media.harness.test" -addext "subjectAltName=DNS:media.harness.test" \
+            -keyout tests/fixtures/test-key.pem -out tests/fixtures/test-cert.pem
       # 型と試験 (Dockerfile の test 段)。Node を runner に入れずに済ませる
       - uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
         with:
