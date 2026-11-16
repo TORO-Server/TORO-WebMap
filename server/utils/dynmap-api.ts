@@ -1,10 +1,10 @@
-// map.torosaba.net (Dynmap) の API の実装 (正本はここ 1 か所)。
-// 旧パス (server/routes/up/, server/routes/tiles/) と新パス (server/routes/map/v1/) の両方が、ここの値をそのまま default export する。
-// パスの対応表は docs/map-deployment.md
+// 地図 (Dynmap の画面、BlueMap の画面) の API の実装 (正本はここ 1 か所)。
+// 公開するパスは api.torosaba.net の /map/v1/ (server/routes/map/v1/) と、3d-map.torosaba.net の WebSocket /up/ws (server/routes/up/ws.ts)。どちらもここの値をそのまま default export する。
+// パスの一覧は docs/map-deployment.md
 import type { RowDataPacket } from 'mysql2/promise'
 import { decodePathParam } from '../lib/path-param'
 
-// ---- 設定 (/up/configuration, /map/v1/configuration)
+// ---- 設定 (/map/v1/configuration)
 // Dynmap のブラウザ側が最初に読む設定 (ログインは使っていないので、書き出されたものをそのまま返す)
 export const dynmapConfigurationHandler = defineEventHandler(async (event) => {
   const config = await dynmapStandaloneFile('dynmap_config.json')
@@ -12,7 +12,7 @@ export const dynmapConfigurationHandler = defineEventHandler(async (event) => {
   return respond(event, { data: config, type: 'application/json; charset=utf-8', cache: 'no-cache' })
 })
 
-// ---- ワールドの更新 (/up/world/<world>/<ts>, /map/v1/world/<world>/<ts>)
+// ---- ワールドの更新 (/map/v1/world/<world>/<ts>)
 // Dynmap のブラウザ側が 2 秒ごとに読むワールドの更新 (プレイヤーの位置、描き直したタイルなど)
 // 中身は時刻によらず同じ。どの更新が新しいかはブラウザ側が timestamp で選ぶ
 export const dynmapWorldUpdateHandler = defineEventHandler(async (event) => {
@@ -25,8 +25,8 @@ export const dynmapWorldUpdateHandler = defineEventHandler(async (event) => {
   return respond(event, { data: update, type: 'application/json; charset=utf-8', cache: 'no-cache' })
 })
 
-// ---- タイル・マーカー・顔 (/tiles/..., /map/v1/tiles/...)
-// Dynmap の /tiles/ (configuration.txt の url: で tiles と markers をここにしている)
+// ---- タイル・マーカー・顔 (/map/v1/tiles/...)
+// Dynmap のタイル置き場と同じ形のパス
 //   tiles/<world>/<prefix>/<x_y>/<zoom_x_y>.<ext>  地図のタイル
 //   tiles/_markers_/marker_<world>.json            マーカー
 //   tiles/_markers_/<icon>.png                     マーカーのアイコン
@@ -92,7 +92,7 @@ export const dynmapTilesHandler = defineEventHandler(async (event) => {
   })
 })
 
-// ---- WebSocket (/up/ws, /map/v1/ws)
+// ---- WebSocket (/map/v1/ws と、3d-map.torosaba.net の /up/ws)
 // ブラウザ (map.torosaba.net / 3d-map.torosaba.net の画面) との WebSocket。
 // map.torosaba.net (Dynmap): 見ているワールドを {"subscribe": "<world>"} で知らせてもらい、そのワールドの更新とプレイヤーの位置を送る (server/utils/live.ts)
 // 3d-map.torosaba.net (BlueMap): 見ている地図を {"bluemap": "<map>"} で知らせてもらい、BlueMap のライブ情報を送る (server/utils/bluemap-live.ts)

@@ -31,10 +31,7 @@ MarumaSign の看板 (画像・動画・音声・ライブ配信・PDF) を 3D �
 | `app/lib/markers.ts` | マーカー (`web/js/markers.js` と同じ見た目) |
 | `app/lib/gl-marker-layer.ts` | 点のマーカーの絵を WebGL でまとめて描く。マウスを乗せたものだけ元の DOM のマーカーを重ね、名前と吹き出しはそれが出す |
 | `app/lib/culled-group.ts` | 名前を常に出す組と、WebGL が使えないとき (`?gl=0` でも) の DOM のマーカー。画面の近くのものだけ作る |
-| `server/routes/tiles/[...path].get.ts` | Dynmap の `/tiles/...` (タイル、マーカー、アイコン、プレイヤーの顔) |
 | `server/routes/map/v1/**` | 上の `/up/*` `/tiles/*` と同じ実装 (`server/utils/dynmap-api.ts`) を api.torosaba.net の `/map/v1/*` で返す。静的/API 分離は `docs/map-deployment.md` |
-| `server/routes/up/configuration.get.ts` | Dynmap の `/up/configuration` |
-| `server/routes/up/world/[world]/[ts].get.ts` | Dynmap の `/up/world/<world>/<時刻>` |
 | `server/routes/maps/[...path].get.ts` | BlueMap の `/maps/<map>/...` |
 | `server/routes/maps/[map]/live/markers.json.get.ts`, `server/utils/dynmap-markers.ts` | BlueMap のマーカー。BlueMap 内蔵の Web サーバーのマーカーに、Dynmap で最初から出している組の点のマーカー (駅や IC など) を足す。中身が空の html マーカーなので 3D の画面には描かず、一覧にだけ出る (選ぶとカメラが動く)。地図とワールドの対応は `nuxt.config.ts` の `bluemap.dynmapWorlds` |
 | `server/routes/up/ws.ts`, `server/utils/live.ts`, `server/lib/live-hub.ts` | ブラウザへの WebSocket (`/up/ws`)。Dynmap の更新を DB から 1 秒ごとに 1 度だけ読んで、変わったときに送る (読むのは `dynmap_config.json` にあるワールドだけ)。プレイヤーの位置は dynmap-live から届いたものをすぐ送る。送るのは、Dynmap の更新の `players` で `world` が実在のワールドで、dynmap-live の位置と同じワールドの人だけ (Dynmap は隠す人の `world` を実在しない名前にして送る)。体力と防具も Dynmap が送っているときだけ。どのくらい隠すかは Dynmap の `configuration.txt` の `ClientUpdateComponent` の設定で決まる。1 つのメッセージの大きさの上限は `server/lib/ws-options.ts` |
@@ -51,7 +48,7 @@ MarumaSign の看板 (画像・動画・音声・ライブ配信・PDF) を 3D �
 - タイルの URL にページを開いた時刻を付けない (付けると開くたびに URL が変わり、ブラウザにも Cloudflare にもキャッシュが効かない)。描き直したタイルには、届いた時刻を付けて読み直す
 - タイルの読み込みを 5 枚ずつに絞らない
 - jQuery を使わない
-- 更新は WebSocket (`/up/ws`) で届く。全員が 2 秒ごとに取りに来る代わりに、サーバーが変わったときだけ送る。
+- 更新は WebSocket (`/map/v1/ws`。3d-map の画面は `/up/ws`) で届く。全員が 2 秒ごとに取りに来る代わりに、サーバーが変わったときだけ送る。
   プレイヤーは TORO-Core の dynmap-live から 0.25 秒ごとに届く位置へ滑らかに動く。つながらないときは前と同じく 2 秒ごとに取りに行く
 
 Dynmap を更新したときは、`up/configuration` と `up/world/...` の形、`web/css/dynmap_style.css` のクラス名が変わっていないか確かめてください。
