@@ -53,6 +53,7 @@
 | 前 | `api.torosaba.net` | `^/map/` | `http://toro-edge:80` |
 | 後 | `api.torosaba.net` | (なし) | `http://toro-api:8080` |
 
+- `^` は Tunnel のパス欄に書く正規表現の記号 (行頭)。URL の一部ではない。ホスト名とパスの欄は別々に入力し、1 つの URL にまとめない (ホスト名に `^` を付けた URL は存在しない)。実際の URL は `https://api.torosaba.net/map/v1/*` の形。
 - パスの欄は正規表現。`^/map/` を、パス指定なしの規則より**上**に置く (上から順に最初に合うものが使われる)。追加直後は末尾に入るので、並べ替える。
 - 確認 (GET のみ): `/map/v1/configuration` が 200、`/server/status` が toro-api の 200。
 - 変更したら、cloudflared のログの `Updated to new configuration` (version が上がる) に出る規則の並びで確かめる。
