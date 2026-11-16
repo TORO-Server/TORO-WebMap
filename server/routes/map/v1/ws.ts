@@ -1,3 +1,3 @@
-// /up/ws と同じ実装 (server/utils/dynmap-api.ts)
+// 実装は server/utils/dynmap-api.ts (3d-map.torosaba.net の /up/ws も同じ)
 export default dynmapLiveSocketHandler
 

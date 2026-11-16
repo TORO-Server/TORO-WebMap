@@ -4,5 +4,3 @@ node_modules
 public/toro
 public/sw.js
 dev.log
-tests/fixtures/test-key.pem
-tests/fixtures/test-cert.pem

@@ -132,7 +132,7 @@ export default defineNuxtConfig({
   nitro: {
     // public/toro/dynmap-client.js (client/dynmap-client.ts を esbuild で変換したもの。古い画面 legacy.html 用)
     publicAssets: [{ dir: 'public', maxAge: 300 }],
-    // /up/ws (ブラウザ) と /live/plugin (TORO-Core) の WebSocket
+    // /map/v1/ws と /up/ws (ブラウザ。/up/ws は 3d-map の画面用) と /live/plugin (TORO-Core) の WebSocket
     experimental: { websocket: true },
   },
   // npm run dev: Dynmap の画面の API は既定の apiBase (本番の API) を使う。css/ images/ は public/ にある。

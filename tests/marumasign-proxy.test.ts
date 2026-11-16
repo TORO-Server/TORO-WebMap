@@ -1,11 +1,11 @@
 // 看板の転送先の調べ (/_marumasign/resolve) と中継 (/_marumasign/proxy) の試験: npm test
 // アドレスの確かめ (SSRF を防ぐ)、看板データにある URL だけを読むこと、再生リストからたどれる URL、転送の追い方 (手元の HTTPS のサーバーで)
-// fixtures/test-cert.pem は試験だけの自己署名の証明書 (試験では、決まった名前だけを手元につなぎ、証明書を確かめない)
+// 手元の HTTPS のサーバーの証明書は、試験の実行時に作る使い捨ての自己署名 (tests/lib/self-signed.ts。試験では、決まった名前だけを手元につなぎ、証明書を確かめない)
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { readFileSync } from 'node:fs'
 import { createServer, type Server } from 'node:https'
 import type { AddressInfo } from 'node:net'
+import { selfSignedPair } from './lib/self-signed.ts'
 import { checkUrl, follow, isBlockedAddress, resolveRedirects, safeLookup, UpstreamError } from '../server/lib/marumasign/net.ts'
 import { AllowList, ALIAS_TTL, signUrls, siteOf } from '../server/lib/marumasign/allow.ts'
 import { classify, looksLikeHtml, MAX_FOREIGN_OPAQUE_BYTES, MAX_FOREIGN_SMALL_BYTES, MAX_OPAQUE_BYTES } from '../server/lib/marumasign/kinds.ts'
@@ -476,8 +476,7 @@ test('数と量の上限', () => {
 
 // ---------------------------------------------------------------- 手元の HTTPS のサーバーで、転送の追い方
 
-const cert = readFileSync(new URL('./fixtures/test-cert.pem', import.meta.url))
-const key = readFileSync(new URL('./fixtures/test-key.pem', import.meta.url))
+const { cert, key } = selfSignedPair()
 
 /** 手元の HTTPS のサーバー。a.test と b.test (ポートなし = 443) を、試験の名前としてここにつなぐ */
 async function withServer(fn: (testHosts: Record<string, string>, hits: string[]) => Promise<void>): Promise<void> {

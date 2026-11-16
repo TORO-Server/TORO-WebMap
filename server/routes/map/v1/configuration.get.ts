@@ -1,3 +1,3 @@
-// /up/configuration と同じ実装 (server/utils/dynmap-api.ts)。パスの対応表は docs/map-deployment.md
+// 実装は server/utils/dynmap-api.ts。パスの一覧は docs/map-deployment.md
 export default dynmapConfigurationHandler
 
