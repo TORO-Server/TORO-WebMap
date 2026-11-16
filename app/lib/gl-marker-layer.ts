@@ -209,6 +209,8 @@ export class GLMarkerLayer extends L.Layer {
       this.failedIcons.add(icon.url)
       this.schedule()
     }
+    // API は別オリジン (api.torosaba.net)。CORS で読まないと地図帳の canvas が汚染され、texImage2D が SecurityError で失敗してアイコンが 1 つも出ない
+    img.crossOrigin = 'anonymous'
     img.src = icon.url
     this.images.set(icon.url, img)
   }
