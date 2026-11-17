@@ -1,5 +1,5 @@
 // Dynmap のブラウザ側 (web/js/*.js) を、見た目を変えずに軽くする。
-// toro-edge が index.html の standalone/config.js の前にこのスクリプトを差し込む。leaflet.js, custommarker.js, dynmaputils.js などは読み終わっている。
+// 入り口のプロキシが index.html の standalone/config.js の前にこのスクリプトを差し込む。leaflet.js, custommarker.js, dynmaputils.js などは読み終わっている。
 //
 // 1. ズームのたびに Dynmap は全マーカーを外して付け直す (markers.js の updateMarker)。外してすぐ付け直すものは DOM に触らない
 // 2. 画面の外 (と周りに半画面ずつ) のマーカーは DOM を作らず、近づいたら作る

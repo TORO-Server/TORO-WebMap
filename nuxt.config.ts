@@ -1,5 +1,5 @@
 // app/: map.torosaba.net の地図の画面 (Dynmap の web/index.html の代わり)。サーバーで描かず、ブラウザで描く
-// server/routes/: 地図のデータを TiDB から返す API (Dynmap と BlueMap)。toro-edge から呼ばれる。BlueMap (3D 地図) の画面は TORO-3D-WebMap
+// server/routes/: 地図のデータを TiDB から返す API (Dynmap と BlueMap)。入り口のプロキシから呼ばれる。BlueMap (3D 地図) の画面は TORO-3D-WebMap
 export default defineNuxtConfig({
   compatibilityDate: '2026-10-01',
   ssr: false,
@@ -28,7 +28,7 @@ export default defineNuxtConfig({
     },
     // NUXT_DB_HOST などの環境変数で上書きする
     db: {
-      host: 'tidb',
+      host: 'localhost',
       port: 4000,
       user: 'root',
       password: '',
@@ -43,7 +43,7 @@ export default defineNuxtConfig({
       database: 'bluemap',
       prefix: 'bluemap_',
       // BlueMap 内蔵の Web サーバー (ライブ情報)
-      live: 'http://toro-main:8100',
+      live: 'http://localhost:8100',
       // BlueMap の地図ごとに、マーカーの一覧へ地点を足す Dynmap のワールド
       dynmapWorlds: { overworld: 'main' },
     },
@@ -65,8 +65,8 @@ export default defineNuxtConfig({
     marumasign: {
       enabled: true,
       // 看板データ (marumasign/<地図>.json) と、地図の一覧 (settings.json) の読み場所。
-      // http(s):// なら HTTP で (Docker では toro-edge。Host は signDataHost)、ほかは BlueMap の web のフォルダ
-      signData: 'http://toro-edge',
+      // http(s):// なら HTTP で (Host は signDataHost。空なら看板データは読まない。NUXT_MARUMASIGN_SIGN_DATA で指定する)、ほかは BlueMap の web のフォルダ
+      signData: '',
       signDataHost: '3d-map.torosaba.net',
       // 地図の id。空なら settings.json の maps
       maps: [] as string[],
@@ -99,8 +99,8 @@ export default defineNuxtConfig({
     experimental: { websocket: true },
   },
   // npm run dev: Dynmap の画面の API は既定の apiBase (本番の API) を使う。css/ images/ は public/ にある。
-  // 手元の API を使うなら NUXT_PUBLIC_API_BASE=/map/v1 で手元のサーバーを指す (NUXT_DB_HOST などで DB につなぐ)。TiDB はホストに公開しておらず toro-db の内側だけなので、
-  // サーバーで tidb の IP を調べて (docker network inspect toro-db)、ssh -L 4000:<tidb の IP>:4000 でつなぐ
+  // 手元の API を使うなら NUXT_PUBLIC_API_BASE=/map/v1 で手元のサーバーを指す (NUXT_DB_HOST などで DB につなぐ)。TiDB はホストに公開していないことが多いので、
+  // サーバーで DB の IP を調べて、ssh -L 4000:<DB の IP>:4000 でつなぐ
   $development: {
     // 看板データは本番のもの (中継は手元のサーバーが行う)
     runtimeConfig: {

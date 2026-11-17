@@ -147,7 +147,7 @@ export class SkinResolver {
     try {
       const res = await this.fetcher(url, {
         redirect: 'error', credentials: 'omit', signal: AbortSignal.timeout(TIMEOUT_MILLIS),
-        headers: { 'accept': 'application/json', 'user-agent': 'toro-webmap (3d-map.torosaba.net)' },
+        headers: { 'accept': 'application/json', 'user-agent': 'webmap (3d-map.torosaba.net)' },
       })
       if (res.status === 204 || res.status === 404) return null
       if (!res.ok) throw new Error('HTTP ' + res.status)

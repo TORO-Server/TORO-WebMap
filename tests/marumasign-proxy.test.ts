@@ -47,7 +47,7 @@ test('読んでよい URL の形 (https だけ、怪しいホストとポート�
   assert.equal(checkUrl('https://example.com:8443/a'), 'https://example.com:8443/a')
   for (const bad of [
     'http://example.com/a', 'https://127.0.0.1/a', 'https://[::1]/a', 'https://0x7f.1/a', 'https://localhost/a', 'https://a.local/a',
-    'https://tidb./a', 'https://toro-edge/a', 'https://user:pw@example.com/a', 'https://example.com:22/a', 'https://example.com:3000/a',
+    'https://internal-db./a', 'https://internal-host/a', 'https://user:pw@example.com/a', 'https://example.com:22/a', 'https://example.com:3000/a',
     'ftp://example.com/a', 'javascript:alert(1)', 'https://example.com/<x>', 'https://a..b.com/x',
   ]) {
     assert.equal(checkUrl(bad), null, bad)

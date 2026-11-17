@@ -19,14 +19,14 @@
 - プレイヤーの位置は、Minecraft サーバーの TORO-Core の `dynmap-live` が、TORO-API の内部専用の受け口 (`/live/plugin`) へ送ります。TORO-API は、これと Dynmap の更新を合わせて、`/map/v1/ws` (WebSocket) で画面へ流します。内部専用の受け口は、公開の受け口とは別の番号で待ち受け、公開の入り口 (Tunnel) の対象に入れません。公開側では `/live/*` は 404 です。
 - 送信側 (`dynmap-live`) の設定は、`main/plugins/TORO-Core/dynmap-live/config.yml` の `endpoint` (送り先) と `token` (共有の合言葉。TORO-API の `MAP_LIVE_TOKEN` と同じ値) です。
 
-## 入り口の振り分け (toro-edge)
+## 入り口の振り分け
 
-公開の入り口 (toro-edge。自前のリバースプロキシで、リクエストを中の各サービスへ振り分けます) は、API 用のホストの `/map/v1/` を、環境変数 `EDGE_API_BACKEND` で決めた送り先へ渡します。
+公開の入り口 (自前のリバースプロキシで、リクエストを中の各サービスへ振り分けます) は、API 用のホストの `/map/v1/` を、環境変数 `EDGE_API_BACKEND` で決めた送り先へ渡します。
 
 - `EDGE_API_BACKEND` を設定すると (`ホスト名:番号` の形)、`/map/v1/` の通常の通信 (設定、ワールド、タイル) と WebSocket が、その送り先へ行きます。本番では TORO-API に設定しています。
-- **未設定のときの既定値は、従来の送り先 (toro-webmap、環境変数 `EDGE_MAPWEB` の値) です。** つまり、変数を取り除くだけで従来の動きに戻ります。
+- **未設定のときの既定値は、従来の送り先 (地図サーバー、環境変数 `EDGE_MAPWEB` の値) です。** つまり、変数を取り除くだけで従来の動きに戻ります。
 - 地図の画面のサイトと 3D 地図のサイトの送り先は、この変数では変わりません。
-- toro-edge は 1.4.0 以降でこの変数に対応しています。
+- 入り口のプロキシは 1.4.0 以降でこの変数に対応しています。
 
 ## API の公開するパス
 
@@ -60,13 +60,13 @@ API は `/map/v1/` の下で、次の 4 種類だけを返します。
 
 切り替えた後に重大な食い違いが出たときは、次の順に戻します。Minecraft サーバー本体は再起動しません。
 
-1. toro-edge の設定から `EDGE_API_BACKEND` を取り除き、toro-edge だけを作り直します (`docker compose up -d --no-deps toro-edge`)。ほかのサービスは作り直しません。
-2. `dynmap-live` の `endpoint` を従来の送り先 (toro-webmap の `/live/plugin`) に戻し、`/torocore reload dynmap-live` で再読み込みします。
+1. 入り口のプロキシの設定から `EDGE_API_BACKEND` を取り除き、そのサービスだけを作り直します (`docker compose up -d --no-deps <入り口のサービス名>`)。ほかのサービスは作り直しません。
+2. `dynmap-live` の `endpoint` を従来の送り先 (地図サーバーの `/live/plugin`) に戻し、`/torocore reload dynmap-live` で再読み込みします。
 3. 確認: 公開の `/map/v1/configuration` が従来の応答 (200) に戻ること。存在しないワールドの 404 の本文が、JSON から従来の HTML に戻ることでも、従来の送り先に戻ったと判別できます。位置情報 (WebSocket の `players`) が流れることも確かめます。
 
 ## 許容している違い
 
-従来の送り先 (toro-webmap) と TORO-API の応答には、次の違いがあります。いずれも地図の画面の動作には影響しないため、許容しています。
+従来の送り先 (地図サーバー) と TORO-API の応答には、次の違いがあります。いずれも地図の画面の動作には影響しないため、許容しています。
 
 従来から許容しているもの:
 

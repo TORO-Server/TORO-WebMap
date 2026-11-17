@@ -1,7 +1,7 @@
 import { tokenMatches } from '../../lib/token'
 
 // TORO-Core の dynmap-live (Minecraft サーバーの中) からの WebSocket。全員の位置と体力が 0.25 秒ごとに届く
-// toro-edge はここを外に出さない (Docker の中のネットワークからだけ)。さらに NUXT_LIVE_TOKEN で確かめる
+// 入り口のプロキシはここを外に出さない (Docker の中のネットワークからだけ)。さらに NUXT_LIVE_TOKEN で確かめる
 export default defineWebSocketHandler({
   upgrade(request) {
     if (!tokenMatches(request.headers.get('x-toro-token'), useRuntimeConfig().liveToken)) {

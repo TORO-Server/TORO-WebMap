@@ -20,7 +20,7 @@ export default defineEventHandler(async (event) => {
     if (!uuid) throw createError({ statusCode: 400, statusMessage: 'bad uuid' })
     query = { uuid }
   }
-  // Cloudflare が付けるクライアントの IP (toro-edge には Tunnel からしか届かない)
+  // Cloudflare が付けるクライアントの IP (入り口のプロキシには Tunnel からしか届かない)
   const ip = getRequestHeader(event, 'cf-connecting-ip') || getRequestIP(event, { xForwardedFor: true }) || 'unknown'
   const r = await resolver.resolve(query, limitKey(ip))
   if (r === 'rate' || r === 'busy') {

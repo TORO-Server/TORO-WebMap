@@ -2,7 +2,7 @@ import { Readable } from 'node:stream'
 import type { H3Event } from 'h3'
 import type { HostedFile } from '../../utils/assets'
 
-// assets.torosaba.net/<id>.<拡張子> (toro-edge が /_assets/ に付け替えて送ってくる)。MarumaSign Companion がホストした看板の画像など
+// assets.torosaba.net/<id>.<拡張子> (入り口のプロキシが /_assets/ に付け替えて送ってくる)。MarumaSign Companion がホストした看板の画像など
 // 読めるのは、次のどちらかだけ (ほかのサイトに貼られたり、ただの置き場として使われたりしないように)
 //   - いま TORO で遊んでいるプレイヤーの IP から (MarumaSign の Mod が看板を読む)。IP は Cloudflare の CF-Connecting-IP、
 //     遊んでいる人の IP は TORO-Proxy (Velocity) が知らせてくる (server/utils/clients.ts)
