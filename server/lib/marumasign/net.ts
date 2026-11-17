@@ -13,7 +13,7 @@ import { request as httpsRequest, Agent, type RequestOptions } from 'node:https'
 import type { IncomingMessage } from 'node:http'
 import { isIP } from 'node:net'
 import type { LookupFunction } from 'node:net'
-import { safeUrl, withoutFragment } from '../../../app/bluemap/marumasign/core.ts'
+import { safeUrl, withoutFragment } from './core.ts'
 
 export const MAX_REDIRECTS = 5
 export const USER_AGENT = 'Mozilla/5.0 (MarumaSign; +https://3d-map.torosaba.net)'

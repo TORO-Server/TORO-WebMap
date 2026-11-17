@@ -1,12 +1,8 @@
 <script setup lang="ts">
-// 3d-map.torosaba.net は BlueMap の画面 (app/bluemap/)、それ以外 (map.torosaba.net) は Dynmap の画面。
-// 開いたほうのコードだけを読み込む (手元では ?app=bluemap で BlueMap の画面になる)
+// map.torosaba.net の Dynmap の画面。3D 地図 (BlueMap) の画面は別のリポジトリ (TORO-3D-WebMap) の静的なサイトになった
 import { defineAsyncComponent, type Component } from 'vue'
 
-const bluemap = window.location.hostname.startsWith('3d-map.') || new URLSearchParams(window.location.search).get('app') === 'bluemap'
-const View = defineAsyncComponent<Component>(bluemap
-  ? () => import('~/bluemap/BlueMapView.vue')
-  : () => import('~/components/DynmapView.vue'))
+const View = defineAsyncComponent<Component>(() => import('~/components/DynmapView.vue'))
 
 // ホーム画面に追加して開けるようにする (client/sw.ts)。手元の npm run dev では使わない
 if (!import.meta.dev && 'serviceWorker' in navigator) {

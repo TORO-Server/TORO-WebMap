@@ -6,8 +6,8 @@
  */
 import {
   MAX_IMAGE_BYTES, MAX_PDF_BYTES, sniff, type Sniffed,
-} from '../../../app/bluemap/marumasign/core.ts'
-import { startsAfterXmlHead } from '../../../app/bluemap/marumasign/xml-head.ts'
+} from './core.ts'
+import { startsAfterXmlHead } from './xml-head.ts'
 
 const MIB = 1024 * 1024
 /** 3D モデル・構造物 (MarumaSign 本体の ImageLoader.MAX_MODEL_SIZE, StructureLoader.MAX_SIZE) */
