@@ -15,7 +15,7 @@ const utcTime = (d: Date): Buffer => der(0x17, Buffer.from(d.toISOString().repla
 const pem = (label: string, data: Buffer): string =>
   `-----BEGIN ${label}-----\n${data.toString('base64').replace(/(.{64})/g, '$1\n').replace(/\n$/, '')}\n-----END ${label}-----\n`
 
-export function selfSignedPair(commonName = 'toro-webmap.test'): { cert: string, key: string } {
+export function selfSignedPair(commonName = 'internal-host.test'): { cert: string, key: string } {
   const { publicKey, privateKey } = generateKeyPairSync('rsa', { modulusLength: 2048 })
   const name = der(0x30, der(0x31, der(0x30, oid(0x55, 0x04, 0x03), der(0x0c, Buffer.from(commonName)))))
   const serial = randomBytes(8)

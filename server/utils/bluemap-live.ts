@@ -2,13 +2,13 @@ import type { Peer } from 'crossws'
 
 // BlueMap (3d-map.torosaba.net) のライブ情報 (プレイヤーの位置、描き直したタイル、マーカーの変更) を、ブラウザへ WebSocket (/up/ws) で届ける中継
 //
-// - BlueMap 内蔵の Web サーバー (toro-main:8100) の live/sse を、見ている地図ごとに 1 本だけつなぎ、届いたイベントをその地図を見ているブラウザ全員へ送る
-//   (今までは、見ている人の数だけ toro-main へつないでいた)
+// - BlueMap 内蔵の Web サーバー (ゲームサーバー上) の live/sse を、見ている地図ごとに 1 本だけつなぎ、届いたイベントをその地図を見ているブラウザ全員へ送る
+//   (今までは、見ている人の数だけ ゲームサーバーへつないでいた)
 // - 送るのは {"type":"bluemap","map":"<地図>","event":"player|tile|marker","data":"<BlueMap が送った JSON の文字列そのまま>"}。
 //   画面 (app/bluemap/js/BlueMapApp.ts) は、SSE のときと同じ処理でこれを受ける
 // - BlueMap 本体とつながっているかは {"type":"bluemap","map":"<地図>","state":"open|error"} で知らせる。
-//   画面は open のあいだ 1 秒ごとの取りに行きをやめ、error (toro-main の再起動中など) のあいだは取りに行く
-// - つなぎっぱなしのとき WebSocket が黙らないよう (toro-edge は 120 秒何も流れないつなぎを切る)、30 秒ごとに {"type":"ping"} を送る
+//   画面は open のあいだ 1 秒ごとの取りに行きをやめ、error (ゲームサーバーの再起動中など) のあいだは取りに行く
+// - つなぎっぱなしのとき WebSocket が黙らないよう (入り口のプロキシは 120 秒何も流れないつなぎを切る)、30 秒ごとに {"type":"ping"} を送る
 
 interface Upstream {
   open: boolean
@@ -50,7 +50,7 @@ function setOpen(mapId: string, up: Upstream, open: boolean): void {
   broadcast(mapId, stateText(mapId, open))
 }
 
-/** toro-main の live/sse を読み続ける。切れたら間を置いてつなぎ直す。見る人がいなくなる (up.stopped) まで */
+/** ゲームサーバーの live/sse を読み続ける。切れたら間を置いてつなぎ直す。見る人がいなくなる (up.stopped) まで */
 async function run(mapId: string, up: Upstream): Promise<void> {
   const { bluemap } = useRuntimeConfig()
   const url = `${bluemap.live}/maps/${encodeURIComponent(mapId)}/live/sse`
@@ -73,7 +73,7 @@ async function run(mapId: string, up: Upstream): Promise<void> {
       }
     }
     catch {
-      // toro-main の再起動中など。つなぎ直す
+      // ゲームサーバーの再起動中など。つなぎ直す
     }
     if (up.stopped) return
     setOpen(mapId, up, false)

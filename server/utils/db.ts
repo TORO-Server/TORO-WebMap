@@ -2,9 +2,9 @@ import mysql from 'mysql2/promise'
 import type { Pool, RowDataPacket } from 'mysql2/promise'
 
 const pools = new Map<string, Pool>()
-// 接続を待つ数の上限 (いっぱいなら待たせずに失敗にする。toro-edge は古いものを返す)。toro-edge が同時に聞く数 (256 + 256) より多く
+// 接続を待つ数の上限 (いっぱいなら待たせずに失敗にする。入り口のプロキシは古いものを返す)。入り口のプロキシが同時に聞く数 (256 + 256) より多く
 const QUEUE_LIMIT = 1024
-// 1 つの問い合わせの時間 (toro-edge が返事を待つ長さと同じ)
+// 1 つの問い合わせの時間 (入り口のプロキシが返事を待つ長さと同じ)
 const QUERY_TIMEOUT_MILLIS = 30_000
 
 /** DB ごとの接続プール。TiDB は 1 台なので、地図の配信には 16 本あれば足りる */

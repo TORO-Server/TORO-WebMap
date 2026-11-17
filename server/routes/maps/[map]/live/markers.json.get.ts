@@ -24,7 +24,7 @@ async function bluemapMarkers(mapId: string): Promise<MarkerSets> {
     if (res.ok) return await res.json() as MarkerSets
   }
   catch {
-    // toro-main の再起動中など。DB の最後の版にする
+    // ゲームサーバーの再起動中など。DB の最後の版にする
   }
   const found = await bluemapItem(mapId, 'bluemap:markers')
   if (!found) return {}

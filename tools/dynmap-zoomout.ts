@@ -6,7 +6,7 @@
 // 使い方 (このリポジトリで): node --experimental-strip-types tools/dynmap-zoomout.ts <world> <map の prefix> <いちばん縮小した段> [--check]
 //   例: node --experimental-strip-types tools/dynmap-zoomout.ts main flat 10
 //   --check: 書き込まず、既にある段を作り直して Dynmap の作ったものと比べる (並べる向きの確認)
-// 接続先は環境変数 DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME (既定は tidb:4000 の root、dynmap)
+// 接続先は環境変数 DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME (既定は localhost:4000 の root、dynmap)
 
 import mysql from 'mysql2/promise'
 import type { RowDataPacket } from 'mysql2/promise'
@@ -23,7 +23,7 @@ if (!world || !prefix || !maxArg) {
 const maxZoom = Number(maxArg)
 
 const db = await mysql.createConnection({
-  host: process.env.DB_HOST ?? 'tidb',
+  host: process.env.DB_HOST ?? 'localhost',
   port: Number(process.env.DB_PORT ?? 4000),
   user: process.env.DB_USER ?? 'root',
   password: process.env.DB_PASSWORD ?? '',

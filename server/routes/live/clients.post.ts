@@ -1,6 +1,6 @@
 import { tokenMatches } from '../../lib/token'
 
-// TORO-Proxy (Velocity) が、いまつながっているプレイヤーの IP を全員分送ってくる ({"ips": [...]})。toro-edge は外に出さない
+// TORO-Proxy (Velocity) が、いまつながっているプレイヤーの IP を全員分送ってくる ({"ips": [...]})。入り口のプロキシは外に出さない
 // 合言葉は X-Toro-Token (NUXT_CLIENTS_TOKEN)。空のときは受け付けない
 
 const MAX_IPS = 2000
