@@ -6,7 +6,7 @@
 
 - 静的な画面: `index.html`、`_nuxt/`、`sw.js`、`pwa/`、`images/`、`css/`。すべて `public/` と `app/` から機械で作ります (`nuxt generate`)。出力はコミットしません。静的なファイルの置き場 (GitHub Pages) から配ります。
 - API: 設定、ワールドの更新、WebSocket、タイル、マーカー、プレイヤーの顔。TiDB を読みます。実装は `server/utils/dynmap-api.ts` の 1 か所です。
-- 3D 地図 (BlueMap) の画面は、この分け方とは別に、リポジトリ [TORO-3D-WebMap](https://github.com/TORO-Server/TORO-3D-WebMap) の静的なサイトになりました。構成の正本はそちらの docs/deployment.md です (写しは作りません)。このアプリのサーバー側の 3D 部分は、TORO-API へ移すまで、従来の 3D 地図の動的な部分として残します。
+- 3D 地図 (BlueMap) の画面は、この分け方とは別に、リポジトリ [TORO-3D-WebMap](https://github.com/TORO-Server/TORO-3D-WebMap) の静的なサイトになりました。公開のホスト名は `3d-map.torosaba.net` で、`3d.torosaba.net` は存在しません。構成の正本はそちらの docs/deployment.md です (写しは作りません)。このアプリのサーバー側の 3D 部分は、TORO-API へ移すまで、従来の 3D 地図の動的な部分として残します。
 - `/live/plugin` と `/live/clients` は内部専用 (共有の合言葉で守ります) で、API の公開側には出しません。
 
 ## API の公開するパス
