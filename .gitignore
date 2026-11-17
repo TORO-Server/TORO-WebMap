@@ -4,3 +4,4 @@ node_modules
 public/toro
 public/sw.js
 dev.log
+dist
