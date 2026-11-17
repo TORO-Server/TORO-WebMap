@@ -28,7 +28,7 @@ BlueMap の画面は、ライブ情報のために `/up/ws` (WebSocket) を、�
 
 - 正本は `nuxt.config.ts` の `runtimeConfig.public.apiBase` です。
 - 画面は `app/lib/api.ts` の `apiUrl(path)` と `wsUrl()` だけで API に触ります。ほかの場所に URL を書きません。
-- ビルド時に差し替えるときは `NUXT_PUBLIC_API_BASE` を使います (自動処理ではリポジトリの変数 `API_BASE`。秘密ではありません)。
+- ビルド時に差し替えるときは `NUXT_PUBLIC_API_BASE` を使います (自動処理では置き場の変数 `API_BASE`。秘密ではありません)。
 
 ## ビルドと公開
 

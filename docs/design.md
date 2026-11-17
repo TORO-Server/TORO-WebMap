@@ -94,7 +94,7 @@ npm run build
   - TIFF・BigTIFF (`tiff.ts`。本体の TiffDecoder と同じ。Zstandard は fzstd、TIFF の中の JPEG は jpeg-js。読めなければ three.js の UTIF でも試す)
   - DDS と KTX2 の BC1 - BC7 (`dds.ts`, `bcn.ts`)。GPU が対応していれば圧縮のまま、対応していなければ (スマートフォンの多く) CPU で RGBA にする。`bcn.ts` の `decodeBc` と `dds.ts` の `decodeDdsPixels` は 3D モデルのテクスチャにも使える
   - DPX・IFF (ILBM・PBM・ACBM、HAM・EHB)・XWD・PGX (`extra.ts`)。本体は FFmpeg で読むので、見え方は FFmpeg に合わせた
-  - JPEG 2000 (`jp2.ts`, `codecs.ts`)。PDF の看板と同じ pdf.js の OpenJPEG (wasm) で、絵を 1 枚だけ置いた PDF にして描く。relaxed SIMD の wasm を読めないブラウザー (Safari など) では、pdf.js の wasm を使わない版を直接呼ぶ
+  - JPEG 2000 (`jp2.ts`, `codecs.ts`)。PDF の看板と同じ pdf.js の OpenJPEG (wasm) で、絵を 1 枚だけ置いた PDF にして描く。relaxed SIMD の wasm を読めないブラウザー (Safari など) では、pdf.js の wasm を使わないバージョンを直接呼ぶ
   - HEIC・HEIF (`heif.ts`, `codecs.ts`)。Safari はそのまま読む。ほかは箱 (格子・透明度・回転・切り抜き) を自前で読み、HEVC と AV1 をブラウザーの WebCodecs で展開する。AV1 の HEIF は、ブランドを AVIF にしてブラウザーに読ませる。WebCodecs が HEVC を展開できない (Firefox、GPU が対応していない Chrome、Linux) か、透明度の白黒の HEVC を展開できないときは、libheif-js (LGPL-3.0、下の「外のもの」) で読む
   - JPEG XL (`codecs.ts`。ブラウザーが読めなければ jxl-oxide の wasm)
   - ImageDecoder のないブラウザーでの、アニメーションの WebP (`webp.ts`, `animation.ts`。コマごとに WebP に包み直して読み、重ねる)
