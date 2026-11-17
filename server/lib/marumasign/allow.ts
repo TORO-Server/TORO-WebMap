@@ -6,8 +6,8 @@
  *    再生リストと別のサイトのものは、中継できる中身をさらに絞る (kinds.ts の classify)
  * Nuxt に頼らない (Node の試験でも動かす)
  */
-import { safeUrl, withoutFragment } from '../../../app/bluemap/marumasign/core.ts'
-import { matchPattern, patternEdgesMatch, type ManifestRefs, type UrlPattern } from '../../../app/bluemap/marumasign/manifest.ts'
+import { safeUrl, withoutFragment } from './core.ts'
+import { matchPattern, patternEdgesMatch, type ManifestRefs, type UrlPattern } from './manifest.ts'
 
 /** 看板データ 1 つ (marumasign/<地図>.json) から、読むかもしれない URL (https のもの、「#」を除く) */
 export function signUrls(data: unknown, into: Set<string> = new Set()): Set<string> {

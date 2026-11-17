@@ -5,7 +5,6 @@ import { mkdir } from 'node:fs/promises'
 
 const apps = [
   { id: 'map', sub: 'Map', subSize: 72 },
-  { id: '3d-map', sub: '3D Map', subSize: 64 },
 ]
 
 /** 左が黒地に白、右が白地に黒のロゴ。scale はマスク可能なアイコン (丸や角丸に切られる) のために文字を内側へ寄せる率 */

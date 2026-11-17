@@ -6,7 +6,7 @@
 
 - 静的な画面: `index.html`、`_nuxt/`、`sw.js`、`pwa/`、`images/`、`css/`。すべて `public/` と `app/` から機械で作ります (`nuxt generate`)。出力はコミットしません。静的なファイルの置き場 (GitHub Pages) から配ります。
 - API: 設定、ワールドの更新、WebSocket、タイル、マーカー、プレイヤーの顔。TiDB を読みます。実装は `server/utils/dynmap-api.ts` の 1 か所です。
-- BlueMap の画面は、この分け方の対象外です。従来どおり、このアプリが返します。
+- 3D 地図 (BlueMap) の画面は、この分け方とは別に、リポジトリ [TORO-3D-WebMap](https://github.com/TORO-Server/TORO-3D-WebMap) の静的なサイトになりました。構成の正本はそちらの docs/deployment.md です (写しは作りません)。このアプリのサーバー側の 3D 部分は、TORO-API へ移すまで、従来の 3D 地図の動的な部分として残します。
 - `/live/plugin` と `/live/clients` は内部専用 (共有の合言葉で守ります) で、API の公開側には出しません。
 
 ## API の公開するパス
@@ -20,7 +20,7 @@ API は `/map/v1/` の下で、次の 4 種類だけを返します。
 | `/map/v1/ws` (WebSocket) | |
 | `/map/v1/tiles/...` | タイル、マーカー (`_markers_/`)、プレイヤーの顔 (`faces/`) |
 
-BlueMap の画面は、ライブ情報のために `/up/ws` (WebSocket) を、同じ接続先へ読みに行きます (`app/bluemap/js/BlueMapApp.ts`)。この経路は撤去しません。
+従来の 3D 地図の画面は、ライブ情報のために `/up/ws` (WebSocket) を読みに来ます。この経路は、新しい 3D 地図へ切り替わり、TORO-API へ移るまで撤去しません。
 
 `Cache-Control` と `Access-Control-Allow-Origin: *` は `server/utils/http.ts` が付けます。
 

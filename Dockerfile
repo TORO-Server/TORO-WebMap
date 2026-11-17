@@ -1,4 +1,4 @@
-# map.torosaba.net (Dynmap) と 3d-map.torosaba.net (BlueMap) の地図データを TiDB から返す Nuxt (Nitro) サーバー
+# map.torosaba.net (Dynmap) と 3d-map.torosaba.net (BlueMap、従来の 3D 画面) の地図データを TiDB から返す Nuxt (Nitro) サーバー
 FROM node:25-alpine@sha256:bdf2cca6fe3dabd014ea60163eca3f0f7015fbd5c7ee1b0e9ccb4ced6eb02ef4 AS build
 WORKDIR /src
 COPY package.json package-lock.json ./

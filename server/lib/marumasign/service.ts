@@ -9,12 +9,12 @@ import { request as httpRequest } from 'node:http'
 import { request as httpsRequest } from 'node:https'
 import { join, resolve, sep } from 'node:path'
 import type { H3Event } from 'h3'
-import { manifestRefs } from '../../../app/bluemap/marumasign/manifest.ts'
+import { manifestRefs } from './manifest.ts'
 import { AllowList, signUrls } from './allow.ts'
 import { classify, MAX_GLTF_PARSE_BYTES, MAX_MANIFEST_BYTES } from './kinds.ts'
 import { ByteCache, Gate, limitKey, WindowLimit } from './limits.ts'
 import { checkUrl, follow, UpstreamError, type NetOptions } from './net.ts'
-import { extensionOf } from '../../../app/bluemap/marumasign/core.ts'
+import { extensionOf } from './core.ts'
 
 export interface MarumaSignConfig {
   enabled: boolean

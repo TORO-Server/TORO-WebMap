@@ -10,9 +10,9 @@ import { checkUrl, follow, isBlockedAddress, resolveRedirects, safeLookup, Upstr
 import { AllowList, ALIAS_TTL, signUrls, siteOf } from '../server/lib/marumasign/allow.ts'
 import { classify, looksLikeHtml, MAX_FOREIGN_OPAQUE_BYTES, MAX_FOREIGN_SMALL_BYTES, MAX_OPAQUE_BYTES } from '../server/lib/marumasign/kinds.ts'
 import { ByteCache, Gate, limitKey, WindowLimit } from '../server/lib/marumasign/limits.ts'
-import { dashRefs, gltfRefs, hlsRefs, isDash, manifestRefs, matchPattern, MAX_CHILDREN, MAX_SLOTS, refsInclude, type UrlPattern } from '../app/bluemap/marumasign/manifest.ts'
-import { sniff, sniffGzipInner, TRANSCODE_CONTAINERS } from '../app/bluemap/marumasign/core.ts'
-import { skipXmlHead } from '../app/bluemap/marumasign/xml-head.ts'
+import { dashRefs, gltfRefs, hlsRefs, isDash, manifestRefs, matchPattern, MAX_CHILDREN, MAX_SLOTS, refsInclude, type UrlPattern } from '../server/lib/marumasign/manifest.ts'
+import { sniff, sniffGzipInner, TRANSCODE_CONTAINERS } from '../server/lib/marumasign/core.ts'
+import { skipXmlHead } from '../server/lib/marumasign/xml-head.ts'
 
 const bytes = (...a: (number | string)[]): Uint8Array => {
   const out: number[] = []
