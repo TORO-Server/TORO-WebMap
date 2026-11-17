@@ -1,6 +1,6 @@
 /// <reference lib="webworker" />
-// map.torosaba.net と 3d-map.torosaba.net の Service Worker。public/sw.js に変換して /sw.js で返す (app/app.vue が登録する)
-// ホーム画面に追加してアプリのように開けるようにするためのもの。地図のデータ (tiles/, up/, maps/ など) はキャッシュしない
+// map.torosaba.net の Service Worker。public/sw.js に変換して /sw.js で返す (app/app.vue が登録する)
+// ホーム画面に追加してアプリのように開けるようにするためのもの。地図のデータ (tiles/, up/ など) はキャッシュしない
 // (変わり続けるうえに量が多い。toro-edge と Cloudflare がまとめている)
 // - ページを開くとき: いつもネットから。つながらないときはオフラインのページ (public/pwa/offline.html)
 // - /_nuxt/ の js と css: 名前に版が入っていて中身が変わらないので、一度読んだものはキャッシュから

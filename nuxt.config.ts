@@ -1,5 +1,5 @@
 // app/: map.torosaba.net の地図の画面 (Dynmap の web/index.html の代わり)。サーバーで描かず、ブラウザで描く
-// server/routes/: 地図のデータを TiDB から返す API (Dynmap と BlueMap)。toro-edge から呼ばれる
+// server/routes/: 地図のデータを TiDB から返す API (Dynmap と BlueMap)。toro-edge から呼ばれる。BlueMap (3D 地図) の画面は TORO-3D-WebMap
 export default defineNuxtConfig({
   compatibilityDate: '2026-10-01',
   ssr: false,
@@ -9,8 +9,8 @@ export default defineNuxtConfig({
   // 本番のイメージにソースマップを入れない (ブラウザにも渡さない)
   sourcemap: { server: false, client: false },
   app: {
-    // ブラウザで描く前の HTML にも入るので、日本語のページとして扱われる (Dynmap と BlueMap の index.html は en だった)。
-    // アイコンなど画面ごとのものは、それぞれの画面 (app/components/DynmapView.vue, app/bluemap/BlueMapView.vue) が足す
+    // ブラウザで描く前の HTML にも入るので、日本語のページとして扱われる (Dynmap の index.html は en だった)。
+    // アイコンなどは画面 (app/components/DynmapView.vue) が足す
     head: {
       title: 'TORO Server',
       htmlAttrs: { lang: 'ja' },
@@ -18,43 +18,6 @@ export default defineNuxtConfig({
         { name: 'description', content: 'TORO Server (Minecraft) のワールドの地図' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1' },
       ],
-    },
-  },
-  typescript: {
-    // BlueMap の画面は別に確かめる (app/types/bluemap-view.d.ts)
-    appTsConfig: {
-      compilerOptions: {
-        paths: { '~/bluemap/BlueMapView.vue': ['../app/types/bluemap-view.d.ts'] },
-      },
-      exclude: ['../app/bluemap/**'],
-    },
-  },
-  vite: {
-    // 宣言だけのクラスのフィールドで、親のクラスが入れた値を消さない (tsconfig の useDefineForClassFields: false と同じ)。
-    // BlueMap の画面は元が JavaScript なので、この前提で書かれている (three.js の Object3D の position なども消えない)
-    oxc: {
-      typescript: { removeClassFieldsWithoutInitializer: true },
-      assumptions: { setPublicClassFields: true },
-    },
-    plugins: [{
-      // three.js の DRACOLoader が既定で指す、使わない Draco の展開のプログラム (draco_decoder.js など、合わせて 1 MB) をビルドに入れない。
-      // 3D モデルの看板は glTF 用の小さいもの (DRACO_GLTF_CONFIG) だけを使う (app/bluemap/marumasign/model-load.ts)
-      name: 'drop-draco-defaults',
-      enforce: 'pre',
-      transform(code: string, id: string) {
-        if (!/three[\\/]examples[\\/]jsm[\\/]loaders[\\/]DRACOLoader\.js$/.test(id.split('?')[0]!)) return null
-        const out = code.replace(/new URL\(\s*'\.\.\/libs\/draco\/draco_[a-z_]+\.(?:js|wasm)',\s*import\.meta\.url\s*\)\.toString\(\)/g, '\'\'')
-        if ((code.match(/draco_[a-z_]+\.(?:js|wasm)'/g) ?? []).length - (out.match(/draco_[a-z_]+\.(?:js|wasm)'/g) ?? []).length !== 3) {
-          throw new Error('drop-draco-defaults: DRACOLoader.js changed; check the default decoder URLs')
-        }
-        return { code: out, map: null }
-      },
-    }],
-    // BlueMap の画面の vue-i18n (BlueMap の vite.config.js と同じ)
-    define: {
-      __VUE_I18N_FULL_INSTALL__: true,
-      __VUE_I18N_LEGACY_API__: false,
-      __INTLIFY_PROD_DEVTOOLS__: false,
     },
   },
   runtimeConfig: {
@@ -132,22 +95,16 @@ export default defineNuxtConfig({
   nitro: {
     // public/toro/dynmap-client.js (client/dynmap-client.ts を esbuild で変換したもの。古い画面 legacy.html 用)
     publicAssets: [{ dir: 'public', maxAge: 300 }],
-    // /map/v1/ws と /up/ws (ブラウザ。/up/ws は 3d-map の画面用) と /live/plugin (TORO-Core) の WebSocket
+    // /map/v1/ws と /up/ws (ブラウザ。/up/ws は従来の 3d-map の画面用。TORO-API へ移すまで残す) と /live/plugin (TORO-Core) の WebSocket
     experimental: { websocket: true },
   },
   // npm run dev: Dynmap の画面の API は既定の apiBase (本番の API) を使う。css/ images/ は public/ にある。
   // 手元の API を使うなら NUXT_PUBLIC_API_BASE=/map/v1 で手元のサーバーを指す (NUXT_DB_HOST などで DB につなぐ)。TiDB はホストに公開しておらず toro-db の内側だけなので、
   // サーバーで tidb の IP を調べて (docker network inspect toro-db)、ssh -L 4000:<tidb の IP>:4000 でつなぐ
-  // BlueMap の画面 (?app=bluemap) では settings.json, lang/, assets/, maps/ などを 3d-map.torosaba.net から借りる
   $development: {
     // 看板データは本番のもの (中継は手元のサーバーが行う)
     runtimeConfig: {
       marumasign: { signData: 'https://3d-map.torosaba.net', signDataHost: '' },
-    },
-    nitro: {
-      devProxy: {
-        ...Object.fromEntries(['/settings.json', '/lang', '/assets', '/maps', '/js', '/marumasign'].map(p => [p, { target: `https://3d-map.torosaba.net${p}`, changeOrigin: true }])),
-      },
     },
   },
 })
