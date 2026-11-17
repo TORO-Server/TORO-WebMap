@@ -31,7 +31,7 @@ export interface Player extends Location {
   sort: number
 }
 
-/** WebSocket で届くプレイヤーの位置 (server/utils/live.ts) */
+/** WebSocket で届くプレイヤーの位置 (TORO-API が流す) */
 interface LivePlayer extends Location {
   account: string
   world: string
@@ -407,7 +407,7 @@ export class DynmapViewer {
   }
 
   // ---- ワールドの更新 ----
-  // WebSocket (api の ws) につながっているあいだは、更新とプレイヤーの位置が届くのを待つ (server/utils/live.ts)。
+  // WebSocket (api の ws) につながっているあいだは、更新とプレイヤーの位置が届くのを待つ (TORO-API が流す)。
   // つながらないときは、Dynmap の画面と同じく updaterate ごとに world/... を取りに行く
 
   private connectLive(): void {

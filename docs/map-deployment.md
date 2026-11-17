@@ -8,13 +8,13 @@
 
 - 静的な画面: `index.html`、`_nuxt/`、`sw.js`、`pwa/`、`images/`、`css/`。すべて `public/` と `app/` から機械で作ります (`nuxt generate`)。出力はコミットしません。静的なファイルの置き場 (GitHub Pages) から配ります。
 - API: 設定、ワールドの更新、WebSocket、タイル、マーカー、プレイヤーの顔。**すべて TORO-API が返します。** データベースとのやり取りも TORO-API だけが担います。
-- 3D 地図 (BlueMap) の画面は、この分け方とは別に、リポジトリ [TORO-3D-WebMap](https://github.com/TORO-Server/TORO-3D-WebMap) の静的なサイトになりました。公開のホスト名は `3d-map.torosaba.net` で、`3d.torosaba.net` は存在しません。構成の正本はそちらの docs/deployment.md です (写しは作りません)。このアプリのサーバー側の 3D 部分は、TORO-API へ移すまで、従来の 3D 地図の動的な部分として残します。
+- 3D 地図 (BlueMap) の画面は、この分け方とは別に、リポジトリ [TORO-3D-WebMap](https://github.com/TORO-Server/TORO-3D-WebMap) の静的なサイトになりました。公開のホスト名は `3d-map.torosaba.net` で、`3d.torosaba.net` は存在しません。構成の正本はそちらの docs/deployment.md です (写しは作りません)。3D 地図の動的な部分も TORO-API が担い、このリポジトリにサーバー側のコードはありません。
 - `/live/plugin` と `/live/clients` は内部専用 (共有の合言葉で守ります) で、API の公開側には出しません。
 
 ## データの流れ
 
 - データの唯一の情報元は、Dynmap のデータベースです。Dynmap が書き込みます。
-- そのデータベースを読むのは TORO-API だけです。読み取りしかできない専用の利用者 (権限は `dynmap` の読み取りのみ) で接続します。このアプリは、通常のときは Dynmap のデータベースを読みません (3D 地図の動的な部分が BlueMap のデータベースを読むのは、この文書の対象外です)。
+- 地図のデータについて、データベースを読むのは TORO-API だけです。読み取りしかできない専用の利用者 (権限は `dynmap` の読み取りのみ) で接続します。このリポジトリのコードは、データベースを読みません。
 - 設定、ワールドの更新、タイル、マーカー、プレイヤーの顔は、TORO-API が読んだデータベースの内容をそのまま返します。
 - プレイヤーの位置は、Minecraft サーバーの TORO-Core の `dynmap-live` が、TORO-API の内部専用の受け口 (`/live/plugin`) へ送ります。TORO-API は、これと Dynmap の更新を合わせて、`/map/v1/ws` (WebSocket) で画面へ流します。内部専用の受け口は、公開の受け口とは別の番号で待ち受け、公開の入り口 (Tunnel) の対象に入れません。公開側では `/live/*` は 404 です。
 - 送信側 (`dynmap-live`) の設定は、`main/plugins/TORO-Core/dynmap-live/config.yml` の `endpoint` (送り先) と `token` (共有の合言葉。TORO-API の `MAP_LIVE_TOKEN` と同じ値) です。
@@ -24,7 +24,7 @@
 公開の入り口 (自前のリバースプロキシで、リクエストを中の各サービスへ振り分けます) は、API 用のホストの `/map/v1/` を、環境変数 `EDGE_API_BACKEND` で決めた送り先へ渡します。
 
 - `EDGE_API_BACKEND` を設定すると (`ホスト名:番号` の形)、`/map/v1/` の通常の通信 (設定、ワールド、タイル) と WebSocket が、その送り先へ行きます。本番では TORO-API に設定しています。
-- **未設定のときの既定値は、従来の送り先 (地図サーバー、環境変数 `EDGE_MAPWEB` の値) です。** つまり、変数を取り除くだけで従来の動きに戻ります。
+- 従来の送り先 (地図サーバー。このリポジトリのサーバー側) は廃止しました。`EDGE_MAPWEB` が指す先も、いまは TORO-API です。
 - 地図の画面のサイトと 3D 地図のサイトの送り先は、この変数では変わりません。
 - 入り口のプロキシは 1.4.0 以降でこの変数に対応しています。
 
@@ -39,7 +39,7 @@ API は `/map/v1/` の下で、次の 4 種類だけを返します。
 | `/map/v1/ws` (WebSocket) | |
 | `/map/v1/tiles/...` | タイル、マーカー (`_markers_/`)、プレイヤーの顔 (`faces/`) |
 
-これ以外のパスは 404 です (本文は JSON)。従来の 3D 地図の画面は、ライブ情報のために `/up/ws` (WebSocket) を読みに来ます。この経路は、新しい 3D 地図へ切り替わり、TORO-API へ移るまで撤去しません。
+これ以外のパスは 404 です (本文は JSON)。
 
 `Cache-Control` と `Access-Control-Allow-Origin: *` は TORO-API が付けます。
 
@@ -52,21 +52,17 @@ API は `/map/v1/` の下で、次の 4 種類だけを返します。
 ## ビルドと公開
 
 - `.github/workflows/pages.yml`: `main` への反映と手動実行で、`npm ci` → `npm run build:client` → `nuxt generate` → 静的な置き場へ公開します。
-- このアプリのサーバー側のイメージ (動かすための一式) は `.github/workflows/image.yml` が作ります。地図の API の実装とイメージは TORO-API のリポジトリにあります。
+- 地図の API の実装とそのイメージは TORO-API のリポジトリにあります。このリポジトリに残る自動処理は `pages.yml` だけです。
 - 画面だけを変えたときは `main` へ反映するだけです。
-- このリポジトリに残っている従来の API の実装 (`server/utils/dynmap-api.ts` など) は、切り戻しの送り先として、当面そのまま残します。
+- 従来の API の実装 (サーバー側のコード) は、このリポジトリから除去しました。最後の状態はタグ `pre-server-removal` にあります。
 
-## 切り戻し手順
+## 切り戻し
 
-切り替えた後に重大な食い違いが出たときは、次の順に戻します。Minecraft サーバー本体は再起動しません。
-
-1. 入り口のプロキシの設定から `EDGE_API_BACKEND` を取り除き、そのサービスだけを作り直します (`docker compose up -d --no-deps <入り口のサービス名>`)。ほかのサービスは作り直しません。
-2. `dynmap-live` の `endpoint` を従来の送り先 (地図サーバーの `/live/plugin`) に戻し、`/torocore reload dynmap-live` で再読み込みします。
-3. 確認: 公開の `/map/v1/configuration` が従来の応答 (200) に戻ること。存在しないワールドの 404 の本文が、JSON から従来の HTML に戻ることでも、従来の送り先に戻ったと判別できます。位置情報 (WebSocket の `players`) が流れることも確かめます。
+従来の地図サーバーは廃止し、このリポジトリのサーバー側のコードも除去しました (最後の状態はタグ `pre-server-removal`)。TORO-API に問題が出たときは、TORO-API のイメージを前の版へ戻します (入り口の振り分けは変えません)。以前の手順 (`EDGE_API_BACKEND` を取り除いて従来の送り先へ戻す) は使えません。
 
 ## 許容している違い
 
-従来の送り先 (地図サーバー) と TORO-API の応答には、次の違いがあります。いずれも地図の画面の動作には影響しないため、許容しています。
+切り替えの前に、従来の送り先 (地図サーバー。廃止済み) と TORO-API の応答を比べ、次の違いがあることを確かめました。いずれも地図の画面の動作には影響しないため、許容しています。
 
 従来から許容しているもの:
 

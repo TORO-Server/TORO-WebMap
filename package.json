@@ -2,10 +2,10 @@
   "name": "toro-webmap",
   "private": true,
   "type": "module",
-  "description": "map.torosaba.net (Dynmap) の地図の画面と、地図のデータを TiDB から返すサーバー。3D 地図 (BlueMap) の画面は TORO-3D-WebMap",
+  "description": "map.torosaba.net (Dynmap) の地図の静的な画面。地図のデータの API は TORO-API。3D 地図 (BlueMap) の画面は TORO-3D-WebMap",
   "scripts": {
     "build:client": "esbuild client/dynmap-client.ts --bundle --minify --format=iife --target=es2017 --outfile=public/toro/dynmap-client.js && esbuild client/sw.ts --bundle --minify --format=iife --target=es2020 --outfile=public/sw.js",
-    "build": "npm run build:client && nuxt build",
+    "build": "npm run build:client && nuxt generate",
     "dev": "npm run build:client && nuxt dev",
     "typecheck": "nuxt typecheck && tsc --noEmit -p client && tsc --noEmit -p client/tsconfig.sw.json && tsc --noEmit -p tools && tsc --noEmit -p tests",
     "test": "node --experimental-strip-types --test \"tests/*.test.ts\""
@@ -13,7 +13,6 @@
   "dependencies": {
     "dompurify": "3.4.17",
     "leaflet": "1.9.4",
-    "mysql2": "3.24.6",
     "nuxt": "4.6.4"
   },
   "devDependencies": {
