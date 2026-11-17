@@ -4,7 +4,7 @@
 
 Dynmap の画面のサイトの画面は `app/` です。Dynmap の `web/index.html` (jQuery と Leaflet 1.7) の代わりに、Vue と Leaflet 1.9 で同じものを描きます。見た目は Dynmap の `css/dynmap_style.css` と `images/` をそのまま使い、同じクラス名の要素を作っています。前の画面は比べるために `/legacy.html` に残してあり、`index.html?worldname=...` のような前のリンクは `/?worldname=...` に転送します。
 
-BlueMap (3D 地図) の画面は、別のリポジトリ [TORO-3D-WebMap](https://github.com/TORO-Server/TORO-3D-WebMap) の静的なサイトになりました。このリポジトリには、従来の 3D 地図が使っているサーバー側 (地図のデータの配信、看板の中継、Minecraft のリソース) が、TORO-API へ移すまで現行の動的な部分として残っています。構成の正本は TORO-3D-WebMap の `docs/deployment.md` です。`3d-map` を新しいサイトへ切り替えるまで、従来の画面を出していた本番のイメージ (1.2.2) は作り直しません。`server/lib/marumasign/` の `core.ts`、`manifest.ts`、`xml-head.ts` は、画面側と共有していたものを TORO-3D-WebMap と同じ内容で写したものです。
+BlueMap (3D 地図) の画面は、別のリポジトリ [TORO-3D-WebMap](https://github.com/TORO-Server/TORO-3D-WebMap) の静的なサイトになりました。このリポジトリには、従来の 3D 地図が使っているサーバー側 (地図のデータの配信、看板の中継、Minecraft のリソース) が、TORO-API へ移すまで現行の動的な部分として残っています。`server/lib/marumasign/` の `core.ts`、`manifest.ts`、`xml-head.ts` は、画面側と共有していたものを TORO-3D-WebMap と同じ内容で写したものです。
 
 地図のデータはすべて TiDB にあります。
 
@@ -84,9 +84,9 @@ npm run build
   - https だけ。転送の行き先ごとに名前を引いたアドレスを確かめ、手元・家の中・内部のネットワーク・共有アドレス (CGNAT)・リンクローカル・マルチキャスト・IPv6 の固有ローカルなどにはつながない (`server/lib/marumasign/net.ts`。つなぐときの名前引きで確かめるので、確かめた後にすり替えられない)
   - 返すのは先頭のバイト列で分かった種類 (画像・動画・音声・PDF・3D のもの・再生リスト) だけで、大きさは種類ごとに MarumaSign 本体と同じ上限。HTML は返さない。返すものは `Content-Security-Policy: sandbox`、`nosniff`、`Content-Disposition: attachment`、決まった Content-Type で、このサイトのページとして開けない (`server/lib/marumasign/kinds.ts`)
   - 地図のページからだけ (`Sec-Fetch-Site`、`Origin`。ブラウザーでないものは避けられるので、貼り付けの抑止にとどまる)。1 つの IP (`CF-Connecting-IP`。IPv6 は /64 ごと) から 10 分あたりの数と量、全体の 10 分あたりの量、同時に読む数に上限
-  - TORO-Edge は `/_marumasign/` をこのアプリに送り、そこではためない (`streamHandler`)
+  - 入り口のプロキシは `/_marumasign/` をこのアプリに送り、そこではためない (`streamHandler`)
 - プレイヤーの頭のスキン (建築データ): 名前や UUID しか書かれていないものは、このサーバーの `/mcassets/skin?name=` / `?uuid=` に聞かれる。サーバーは形を確かめた名前か UUID で、決まったホスト (名前 → UUID は api.mojang.com、だめなら api.minecraftservices.com。UUID → textures は sessionserver.mojang.com) だけに問い合わせ、スキンの URL と腕のモデルだけを返す (分かったものは 1 時間、分からなかったものと失敗は 10 分覚える。4096 件まで。1 つの IP から 10 分に 600 回、そのうち問い合わせは 60 回まで (CF-Connecting-IP)。同時に 4 つ、待たせるのは 64 まで。5 秒で時間切れ、Cookie なし、転送は追わない)。分からなければ Steve
 
-リソースは、TORO-WebMap が起動したときに jar から作ってメモリに持ち (1 秒ほど)、`/mcassets/<hash>/` で返します (`assets.json` = blockstates, models, アイテムの定義、バイオームの色など、`textures.bin` = 使うテクスチャの PNG を並べたもの、`unifont/<ページ>.txt`)。URL に内容を表す識別子が入るので、ブラウザーも途中の中継もいつまでも持ってよく、`/mcassets/index.json` (5 分) がいまの識別子を返します。Mojang のファイルは git にも Docker のイメージにも入れず、jar は読むだけでマウントします。BlueMap のリソースパック (`main/plugins/BlueMap/packs`) もマウントすれば、名前の順に上書きします (本体は使わないので、同じ見た目にするならマウントしない)。Unifont は jar になく、初めてのときに Mojang の配布元から hash を確かめて 1 度だけ読み、`NUXT_MCASSETS_CACHE` に置きます。
+リソースは、TORO-WebMap が起動したときに jar から作ってメモリに持ち (1 秒ほど)、`/mcassets/<hash>/` で返します (`assets.json` = blockstates, models, アイテムの定義、バイオームの色など、`textures.bin` = 使うテクスチャの PNG を並べたもの、`unifont/<ページ>.txt`)。URL に内容を表す識別子が入るので、ブラウザーも途中の中継もいつまでも持ってよく、`/mcassets/index.json` (5 分) がいまの識別子を返します。Mojang のファイルは git にも Docker のイメージにも入れず、jar は読むだけでマウントします。BlueMap のリソースパックもマウントすれば、名前の順に上書きします (本体は使わないので、同じ見た目にするならマウントしない)。Unifont は jar になく、初めてのときに Mojang の配布元から hash を確かめて 1 度だけ読み、`NUXT_MCASSETS_CACHE` に置きます。
 
-TORO-Edge には、`/mcassets/` (`/mcassets/skin` も) をこのアプリに渡す規則が要ります (TORO-Edge の `sites.go`。中身は Cache-Control のとおり持ってよい)。新しい jar が増えたら、10 分ごとの確かめで作り直します。jar がないとき (`/mcassets/index.json` が 503) は、前と同じ簡単にした形を地図のテクスチャで描きます (`structure/mesher.ts`)。
+入り口のプロキシには、`/mcassets/` (`/mcassets/skin` も) をこのアプリに渡す規則が要ります (中身は Cache-Control のとおり持ってよい)。新しい jar が増えたら、10 分ごとの確かめで作り直します。jar がないとき (`/mcassets/index.json` が 503) は、前と同じ簡単にした形を地図のテクスチャで描きます (`structure/mesher.ts`)。
