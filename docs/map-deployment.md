@@ -49,6 +49,14 @@ API は `/map/v1/` の下で、次の 4 種類だけを返します。
 - 画面は `app/lib/api.ts` の `apiUrl(path)` と `wsUrl()` だけで API に触ります。ほかの場所に URL を書きません。
 - ビルド時に差し替えるときは `NUXT_PUBLIC_API_BASE` を使います (自動処理では置き場の変数 `API_BASE`。秘密ではありません)。
 
+## タイルの基点 (tileBase)
+
+- 地図のタイル (`/map/v1/tiles/<world>/<map>/<dir>/<zz_x_y>.<ext>`) だけは、API とは別のホスト (assets) から読みます。パスは API と同じで、ホスト名だけが違います。
+- 正本は `nuxt.config.ts` の `runtimeConfig.public.tileBase` です (`apiBase` の隣)。画面は `app/lib/api.ts` の `tileUrl(path)` だけでタイルに触ります。`?timestamp=` の付け方は従来どおりです。
+- マーカー (`tiles/_markers_/`) とプレイヤーの顔 (`tiles/faces/`) は、タイルと同じ `tiles/` の接頭辞を共有しますが、タイルではないため `apiUrl` のまま (API のホスト) です。分け方は、呼び出す関数 (`tileUrl` か `apiUrl`) で決めます。
+- ビルド時に差し替えるときは `NUXT_PUBLIC_TILE_BASE` を使います (自動処理では置き場の変数 `TILE_BASE`。秘密ではありません)。
+- assets のホストは、`/map/v1/tiles/` を TORO-API へ振り分ける入り口 (別の担当) が前提です。
+
 ## ビルドと公開
 
 - `.github/workflows/pages.yml`: `main` への反映と手動実行で、`npm ci` → `npm run build:client` → `nuxt generate` → 静的な置き場へ公開します。

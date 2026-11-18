@@ -11,6 +11,11 @@ export function isOpenableLink(link: string, base: string): boolean {
   }
 }
 
+/** 基点 (末尾の / なし) とパスをつなぐ。パスの先頭の / は取り除く (api.ts の apiUrl と tileUrl が使う) */
+export function joinBase(base: string, path: string): string {
+  return `${base}/${path.replace(/^\/+/, '')}`
+}
+
 export function param(name: string): string {
   return new URLSearchParams(window.location.search).get(name) ?? ''
 }

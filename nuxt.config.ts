@@ -24,6 +24,9 @@ export default defineNuxtConfig({
       // Dynmap の画面が読む API の基点 (app/lib/api.ts)。この文字列の正本はここ 1 か所。
       // 静的な画面 (GitHub Pages) のビルドで NUXT_PUBLIC_API_BASE を設定すると差し替えられる。docs/map-deployment.md
       apiBase: 'https://api.torosaba.net/map/v1',
+      // 地図のタイル (HD 地図の画像) だけを読む基点 (app/lib/api.ts の tileUrl)。パスは apiBase と同じで、ホスト名だけが assets。
+      // この文字列の正本もここ 1 か所。ビルド時に NUXT_PUBLIC_TILE_BASE で差し替えられる。docs/map-deployment.md
+      tileBase: 'https://assets.torosaba.net/map/v1',
     },
   },
   nitro: {

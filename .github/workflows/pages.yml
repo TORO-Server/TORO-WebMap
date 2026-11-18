@@ -37,8 +37,10 @@ jobs:
       - name: Generate site
         env:
           API_BASE: ${{ vars.API_BASE }}
+          TILE_BASE: ${{ vars.TILE_BASE }}
         run: |
           if [ -n "$API_BASE" ]; then export NUXT_PUBLIC_API_BASE="$API_BASE"; fi
+          if [ -n "$TILE_BASE" ]; then export NUXT_PUBLIC_TILE_BASE="$TILE_BASE"; fi
           npx nuxt generate
 
       - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
