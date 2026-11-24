@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /tiles/
+Disallow: /up/
+Disallow: /standalone/
+Sitemap: https://map.torosaba.net/sitemap.xml
